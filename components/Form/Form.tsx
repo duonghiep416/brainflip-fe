@@ -13,9 +13,10 @@ const Form = (
   { children, onSubmit, ...props }: FormInterface,
   ref: React.Ref<HTMLFormElement>,
 ) => {
-  const formMethods = useForm<Record<string, any>>(
-    props?.isCheckValidate && { mode: 'onChange' },
-  );
+  const formMethods = useForm<Record<string, any>>();
+  {
+    mode: 'onTouched';
+  }
   return (
     <div className={clsx('w-full', props.className)}>
       {props?.title && (
@@ -35,7 +36,6 @@ const Form = (
         <form
           noValidate
           onSubmit={e => {
-            console.log(e, 'e');
             e.preventDefault();
             formMethods.handleSubmit(onSubmit)(e);
           }}

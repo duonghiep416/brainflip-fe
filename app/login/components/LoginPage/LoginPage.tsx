@@ -21,22 +21,26 @@ export const LoginPage = () => {
             </div>
             <div className={styles.item_main_header_tabs}>
               <Tabs aria-label="Tabs auth" radius="full">
-                <Tab
-                  key="login"
-                  title={<p className="text-neutral-800 font-medium">Log In</p>}
-                />
-                <Tab
-                  key="signup"
-                  title={
-                    <p className="text-neutral-800 font-medium">Sign Up</p>
-                  }
-                />
+                <Tab key="login" title={<p>Log In</p>} />
+                <Tab key="signup" title={<p>Sign Up</p>} />
               </Tabs>
             </div>
           </div>
           <div className={styles.item_main_content}>
-            <p className={styles.item_main_title}>Hi there!</p>
-            <p className={styles.item_main_description}>
+            <p
+              className={clsx(
+                styles.item_main_title,
+                'text-neutral-800 dark:text-neutral-200',
+              )}
+            >
+              Hi there!
+            </p>
+            <p
+              className={clsx(
+                styles.item_main_description,
+                'text-neutral-600 dark:text-neutral-400',
+              )}
+            >
               Welcome to BrainFlip. The best all-in-one AI tool for studying.
             </p>
             <div className={styles.item_main_social}>

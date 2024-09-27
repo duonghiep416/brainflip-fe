@@ -16,11 +16,11 @@
     .item_main_content {
       @apply p-5 md:px-32 lg:px-8 xl:px-32;
       .item_main_title {
-        @apply text-neutral-800 text-4xl font-bold text-center;
+        @apply text-4xl font-bold text-center;
       }
 
       .item_main_description {
-        @apply text-neutral-600 text-base font-medium  text-center my-8;
+        @apply text-base font-medium text-center my-8;
       }
 
       .item_main_social {

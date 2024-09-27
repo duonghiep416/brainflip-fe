@@ -10,15 +10,15 @@ import React, {
   useId,
 } from 'react';
 import { useFormContext } from 'react-hook-form';
-import { useDispatch, useSelector } from 'react-redux';
-
+import { InputProps as InputNextProps } from '@nextui-org/react';
+import { Input as InputNext } from '@nextui-org/react';
 function getNestedError(errors: any, name: string): string | undefined {
   return name.split('.').reduce((acc, part) => acc && acc[part], errors)
     ?.message;
 }
 
-export interface InputProps
-  extends React.InputHTMLAttributes<HTMLInputElement> {
+export interface InputProps extends Omit<InputNextProps, 'autoComplete'> {
+  autoComplete?: React.InputHTMLAttributes<HTMLInputElement>['autoComplete'];
   label?: string;
   name: string;
   icons?: React.ReactNode;
@@ -32,6 +32,7 @@ export interface InputProps
   isRemoveVietNameseTone?: boolean;
   isCurrency?: boolean;
   groupsRequired?: string[];
+  isRequireMark?: boolean;
 }
 
 const Input = (
@@ -53,6 +54,7 @@ const Input = (
     isRemoveVietNameseTone = false,
     disabled,
     groupsRequired,
+    isRequireMark = true,
     ...props
   }: InputProps,
   ref: ForwardedRef<HTMLInputElement>,
@@ -61,18 +63,11 @@ const Input = (
   const generateId = useId();
   const id = props?.id || generateId;
   const inputsGroup = formMethods?.watch(groupsRequired || []);
-  const validateGroup = () => {
-    const filledInputs = inputsGroup.filter(
-      input => input && input.trim() !== '',
-    );
-    if (filledInputs.length > 0) {
-      return filledInputs.length === inputsGroup?.length;
-    }
-    return true;
-  };
+
   if (!formMethods) {
     throw new Error('Input component must be used within a Form Component');
   }
+
   const {
     unregister,
     register,
@@ -85,82 +80,57 @@ const Input = (
       unregister(name);
     };
   }, [value]);
-  const handleChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    let inputValue = e.target.value;
-    if (isCurrency) {
-      const value = e.target.value.replace(/[^0-9.]/g, '');
-      e.target.value = value;
-    }
 
-    await register(
-      name,
-      groupsRequired
-        ? {
-            ...rules,
-            validate:
-              validateGroup || 'Vui lòng nhập tất cả các trường trong nhóm',
-          }
-        : rules,
-    ).onChange(e);
+  const handleChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    await register(name, rules).onChange(e);
     if (onChange) {
       onChange(e);
     }
   };
 
   const errorMessage = getNestedError(errors, name) || error;
-  const { ref: registerRef, ...rest } = register(
-    name,
-    groupsRequired
-      ? {
-          ...rules,
-          validate:
-            validateGroup || 'Vui lòng nhập tất cả các trường trong nhóm',
-        }
-      : rules,
-  );
+  const { ref: registerRef, ...rest } = register(name, rules);
   return (
     <>
       <div className={clsx(containerStyles)}>
         {label && (
-          <label htmlFor={id} className={labelStyles}>
+          <label
+            htmlFor={id}
+            className={clsx(
+              labelStyles,
+              'text-neutral-800 dark:text-neutral-200 text-sm font-semibold flex mt-3 mb-1',
+            )}
+          >
             <Text>{label}</Text>
-            {rules?.required && (
-              <span className="text-error-500 w-2 h-2 flex items-center justify-center">
+            {rules?.required && isRequireMark && (
+              <span className="text-red-500 font-normal w-2 h-2 flex items-center justify-center">
                 *
               </span>
             )}
           </label>
         )}
         <div className="relative w-full">
-          <input
-            className={clsx(
-              icons && !isEndIcon ? 'pl-9' : 'pl-2',
-              'border w-full pr-3 py-2 rounded-md focus:outline-none',
-              errors[name] || errorMessage
-                ? 'border-error-500'
-                : 'border-slate-300',
-              disabled ? 'bg-neutral-200' : '',
-              className,
-            )}
+          <InputNext
             id={props?.id || id}
-            {...rest}
+            {...(rest as unknown as InputNextProps)}
             onChange={handleChange}
             autoComplete="off"
             autoCorrect="off"
-            defaultValue={defaultValue}
             ref={e => {
               registerRef(e);
               if (ref && 'current' in ref) {
                 ref.current = e;
               }
             }}
-            {...props}
+            className="text-neutral-800 dark:text-neutral-200"
+            placeholder={label}
+            {...(props as InputNextProps)}
             disabled={disabled}
           />
           {icons && <div className={clsx('absolute', styleIcon)}>{icons}</div>}
         </div>
         {errorMessage && (
-          <p className="text-error-500 text-sm mt-1">
+          <p className="text-red-500 text-xs mt-1">
             {errorMessage as ReactNode}
           </p>
         )}
