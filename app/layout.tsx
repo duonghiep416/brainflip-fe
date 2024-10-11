@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import './globals.css';
 import Providers from '@/components/Providers/Providers';
 import '@/styles/fonts.css';
+import { Toaster } from 'sonner';
 
 export const metadata: Metadata = {
   title: 'Create Next App',
@@ -14,11 +15,9 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html
-      lang="en"
-      //  className="dark" data-theme="dark"
-    >
+    <html lang="en" className="dark" data-theme="dark">
       <body>
+        <Toaster richColors position="top-center" />
         <Providers>{children}</Providers>
       </body>
     </html>

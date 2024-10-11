@@ -10,7 +10,9 @@ import { SiFacebook } from 'react-icons/si';
 import { FaApple } from 'react-icons/fa';
 import TextDivider from '@/components/TextDivider/TextDivider';
 import { FormAuth } from '@/app/login/components/FormAuth/FormAuth';
+import { useState } from 'react';
 export const LoginPage = () => {
+  const [tabSelected, setTabSelected] = useState<'login' | 'signup'>('login');
   return (
     <div className={styles.container}>
       <div className={styles.item}>
@@ -20,7 +22,14 @@ export const LoginPage = () => {
               <Image src="/logo.svg" alt="BrainFlip" width={130} height={42} />
             </div>
             <div className={styles.item_main_header_tabs}>
-              <Tabs aria-label="Tabs auth" radius="full">
+              <Tabs
+                aria-label="Tabs auth"
+                radius="full"
+                selectedKey={tabSelected}
+                onSelectionChange={key =>
+                  setTabSelected(key as 'login' | 'signup')
+                }
+              >
                 <Tab key="login" title={<p>Log In</p>} />
                 <Tab key="signup" title={<p>Sign Up</p>} />
               </Tabs>
@@ -33,7 +42,9 @@ export const LoginPage = () => {
                 'text-neutral-800 dark:text-neutral-200',
               )}
             >
-              Hi there!
+              {tabSelected === 'login'
+                ? 'Hi there!'
+                : 'Join the BrainFlip side'}
             </p>
             <p
               className={clsx(
@@ -61,7 +72,7 @@ export const LoginPage = () => {
               />
             </div>
             <TextDivider />
-            <FormAuth />
+            <FormAuth formType={tabSelected} />
           </div>
         </div>
       </div>
