@@ -1,0 +1,31 @@
+.container {
+  @apply flex flex-row min-h-screen text-neutral-800;
+
+  .item {
+    @apply flex-1;
+  }
+
+  .item_sub {
+    @apply hidden lg:block;
+  }
+
+  .item_main {
+    .item_main_header {
+      @apply flex flex-row justify-center items-center p-[31px] flex-wrap gap-6 xs:justify-between;
+    }
+    .item_main_content {
+      @apply p-5 md:px-32 lg:px-8 xl:px-32;
+      .item_main_title {
+        @apply text-4xl font-bold text-center;
+      }
+
+      .item_main_description {
+        @apply text-base font-medium text-center my-8;
+      }
+
+      .item_main_social {
+        @apply flex flex-col gap-2 mt-4 md:px-32 lg:px-8;
+      }
+    }
+  }
+}
