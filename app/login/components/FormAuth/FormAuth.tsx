@@ -8,12 +8,14 @@ import {
 import { emailRegex, passwordRegex } from '@/utils/regex';
 import { getLocalTimeZone, today } from '@internationalized/date';
 import { Button, DatePicker } from '@nextui-org/react';
-import { useRouter } from 'next/router';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import React, { useEffect } from 'react';
 import { Controller, useFormContext, UseFormReturn } from 'react-hook-form';
 import { toast } from 'sonner';
 
 export const FormAuth = ({ formType }: { formType: 'login' | 'signup' }) => {
+  const router = useRouter();
   const [formMethods, setFormMethods] = React.useState<UseFormReturn | null>(
     null,
   ); // State to hold form methods
@@ -30,8 +32,10 @@ export const FormAuth = ({ formType }: { formType: 'login' | 'signup' }) => {
   const handleLogin = async (body: Record<string, any>) => {
     try {
       const userData = await login(body).unwrap();
-      localStorage.setItem('token', userData.token); // Lưu token vào localStorage
-      // router.push('/dashboard'); // Điều hướng đến trang dashboard sau khi đăng nhập thành công
+      console.log('Login successful:', userData);
+      toast.success('Login successful!'); // Display a success toast
+      document.cookie = `auth-token=${userData.accessToken}; path=/; max-age=86400;`;
+      // router.push('/');
     } catch (err: any) {
       toast.error(err.data.message);
       console.error('Failed to login:', err);
@@ -40,8 +44,9 @@ export const FormAuth = ({ formType }: { formType: 'login' | 'signup' }) => {
   const handleRegister = async (body: Record<string, any>) => {
     try {
       const userData = await register(body).unwrap();
-
+      console.log('Registration successful:', userData);
       // Optionally, you can redirect the user or update the UI to indicate successful registration
+      toast.success('Registration successful!'); // Display a success toast
       console.log('Registration successful:', userData);
       // You might want to automatically log the user in after successful registration
       // Or you could redirect them to a login page or dashboard
@@ -141,6 +146,14 @@ export const FormAuth = ({ formType }: { formType: 'login' | 'signup' }) => {
         radius="lg"
         type="password"
       />
+      {formType === 'login' && (
+        <p className="text-right mt-2 dark:text-white text-sm">
+          Forgot password?{' '}
+          <Link href="#" className="font-bold">
+            Reset it
+          </Link>
+        </p>
+      )}
       <Button
         type="submit"
         color="primary"
