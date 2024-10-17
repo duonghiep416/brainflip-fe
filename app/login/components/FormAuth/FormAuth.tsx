@@ -5,6 +5,8 @@ import {
   useLoginMutation,
   useRegisterMutation,
 } from '@/features/auth/authApiSlice';
+import { LoginCredentials, RegisterCredentials } from '@/features/auth/types';
+import { parseDuration } from '@/utils/dateTime';
 import { emailRegex, passwordRegex } from '@/utils/regex';
 import { getLocalTimeZone, today } from '@internationalized/date';
 import { Button, DatePicker } from '@nextui-org/react';
@@ -29,31 +31,30 @@ export const FormAuth = ({ formType }: { formType: 'login' | 'signup' }) => {
     }
   }, [formType, formMethods]);
   // const router = useRouter();
-  const handleLogin = async (body: Record<string, any>) => {
+  const handleLogin = async (body: LoginCredentials) => {
     try {
       const userData = await login(body).unwrap();
       console.log('Login successful:', userData);
       toast.success('Login successful!'); // Display a success toast
-      document.cookie = `auth-token=${userData.accessToken}; path=/; max-age=86400;`;
-      // router.push('/');
+      document.cookie = `auth-token=${
+        userData.accessToken.value
+      }; path=/; max-age=${parseDuration(userData.accessToken.expiresIn)};`;
+      router.push('/');
     } catch (err: any) {
       toast.error(err.data.message);
       console.error('Failed to login:', err);
     }
   };
-  const handleRegister = async (body: Record<string, any>) => {
+  const handleRegister = async (body: RegisterCredentials) => {
     try {
       const userData = await register(body).unwrap();
       console.log('Registration successful:', userData);
       // Optionally, you can redirect the user or update the UI to indicate successful registration
       toast.success('Registration successful!'); // Display a success toast
-      console.log('Registration successful:', userData);
-      // You might want to automatically log the user in after successful registration
-      // Or you could redirect them to a login page or dashboard
-      // router.push('/dashboard');
-    } catch (err) {
+      router.push('/login');
+    } catch (err: any) {
+      toast.error(err.data.message);
       console.error('Failed to register:', err);
-      // Handle registration error (e.g., display error message to the user)
     }
   };
   return (
@@ -70,9 +71,9 @@ export const FormAuth = ({ formType }: { formType: 'login' | 'signup' }) => {
             }
             e.dob = selectedDate.toISOString();
           }
-          handleRegister(e);
+          handleRegister(e as RegisterCredentials);
         } else if (formType === 'login') {
-          handleLogin(e);
+          handleLogin(e as LoginCredentials);
         }
       }}
       formMethodsRef={setFormMethods}
@@ -102,6 +103,18 @@ export const FormAuth = ({ formType }: { formType: 'login' | 'signup' }) => {
             name="username"
             label="Username"
             placeholder="Enter the username"
+            rules={{
+              required: 'Username is required',
+            }}
+            isRequireMark={false}
+            variant="underlined"
+            color="primary"
+            radius="lg"
+          />
+          <Input
+            name="name"
+            label="Full name"
+            placeholder="Enter your full name"
             rules={{
               required: 'Username is required',
             }}
