@@ -1,6 +1,7 @@
+import { SERVER_URL } from '@/configs/site.config';
 import { NextRequest, NextResponse } from 'next/server';
 
-export function middleware(request: NextRequest) {
+export async function middleware(request: NextRequest) {
   const token = request.cookies.get('auth-token');
   const pathname = request.nextUrl.pathname;
 
@@ -13,14 +14,40 @@ export function middleware(request: NextRequest) {
   ) {
     return NextResponse.next(); // Tiếp tục request mà không cần xử lý
   }
-  console.log('req.url:', request.url);
-  // Log các route thực sự cần kiểm tra
-  console.log('Request pathname:', pathname);
   // Nếu không có token, redirect về trang login
   if (!token && pathname !== '/login') {
     return NextResponse.redirect(new URL('/login', request.url));
   }
-  // Nếu có token, redirect về trang chính
+  // Nếu có token, call api lấy thông tin người dùng để kiểm tra token
+  if (token) {
+    try {
+      const response = await fetch(`${SERVER_URL}/users/me`, {
+        headers: {
+          Authorization: `Bearer ${token.value}`,
+        },
+      });
+      const userData = await response.json();
+      console.log('data', userData);
+      console.log('response.ok', response.ok);
+      // Check if the response is not ok (unauthorized)
+      if (!response.ok) {
+        // Clear the invalid token from cookies
+        const response = NextResponse.redirect(new URL('/login', request.url));
+        response.cookies.delete('auth-token');
+        return response;
+      }
 
+      if (response.ok && pathname === '/login') {
+        return NextResponse.redirect(new URL('/', request.url));
+      }
+
+      // If the response is ok, the token is valid
+      // We can proceed with the request
+    } catch (error) {
+      console.error('Error checking token:', error);
+      // In case of an error, we might want to redirect to login as well
+      return NextResponse.redirect(new URL('/login', request.url));
+    }
+  }
   return NextResponse.next();
 }
