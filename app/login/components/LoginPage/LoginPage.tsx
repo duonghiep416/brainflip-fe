@@ -72,7 +72,7 @@ export const LoginPage = () => {
               />
             </div>
             <TextDivider />
-            <FormAuth formType={tabSelected} />
+            <FormAuth formType={tabSelected} setTabSelected={setTabSelected} />
           </div>
         </div>
       </div>
