@@ -3,6 +3,7 @@ import { NextRequest, NextResponse } from 'next/server';
 
 export async function middleware(request: NextRequest) {
   const token = request.cookies.get('auth-token');
+  const refreshToken = request.cookies.get('auth-refresh-token');
   const pathname = request.nextUrl.pathname;
 
   // Bỏ qua các request đến tài nguyên tĩnh như /_next/ hoặc /favicon.ico, /logo.svg

@@ -1,6 +1,7 @@
 'use client';
 import Form from '@/components/Form/Form';
 import Input from '@/components/Input/Input';
+import { ModalForm } from '@/components/Modal/ModalForm';
 import {
   useLoginMutation,
   useRegisterMutation,
@@ -12,11 +13,17 @@ import { getLocalTimeZone, today } from '@internationalized/date';
 import { Button, DatePicker } from '@nextui-org/react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import React, { useEffect } from 'react';
-import { Controller, useFormContext, UseFormReturn } from 'react-hook-form';
+import React, { Dispatch, SetStateAction, useEffect } from 'react';
+import { Controller, UseFormReturn } from 'react-hook-form';
 import { toast } from 'sonner';
-
-export const FormAuth = ({ formType }: { formType: 'login' | 'signup' }) => {
+import { Input as InputNextUI } from '@nextui-org/react';
+export const FormAuth = ({
+  formType,
+  setTabSelected,
+}: {
+  formType: 'login' | 'signup';
+  setTabSelected: Dispatch<SetStateAction<'login' | 'signup'>>;
+}) => {
   const router = useRouter();
   const [formMethods, setFormMethods] = React.useState<UseFormReturn | null>(
     null,
@@ -39,6 +46,9 @@ export const FormAuth = ({ formType }: { formType: 'login' | 'signup' }) => {
       document.cookie = `auth-token=${
         userData.accessToken.value
       }; path=/; max-age=${parseDuration(userData.accessToken.expiresIn)};`;
+      document.cookie = `auth-refresh-token=${
+        userData.refreshToken.value
+      }; path=/; max-age=${parseDuration(userData.refreshToken.expiresIn)};`;
       router.push('/');
     } catch (err: any) {
       toast.error(err.data.message);
@@ -51,7 +61,7 @@ export const FormAuth = ({ formType }: { formType: 'login' | 'signup' }) => {
       console.log('Registration successful:', userData);
       // Optionally, you can redirect the user or update the UI to indicate successful registration
       toast.success('Registration successful!'); // Display a success toast
-      router.push('/login');
+      setTabSelected('login');
     } catch (err: any) {
       toast.error(err.data.message);
       console.error('Failed to register:', err);
@@ -160,11 +170,23 @@ export const FormAuth = ({ formType }: { formType: 'login' | 'signup' }) => {
         type="password"
       />
       {formType === 'login' && (
-        <p className="text-right mt-2 dark:text-white text-sm">
+        <p className="text-right mt-2 dark:text-white text-sm flex justify-end">
           Forgot password?{' '}
-          <Link href="#" className="font-bold">
-            Reset it
-          </Link>
+          <ModalForm
+            nodeTrigger="Reset it"
+            onSubmit={() => {
+              console.log(1111);
+            }}
+            actionButtonText="Send"
+            header="Reset password"
+            backdrop="opaque"
+          >
+            <InputNextUI
+              label="Enter your email to reset password"
+              labelPlacement="outside"
+              placeholder="Email"
+            />
+          </ModalForm>
         </p>
       )}
       <Button
