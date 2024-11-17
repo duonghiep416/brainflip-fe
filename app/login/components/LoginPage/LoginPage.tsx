@@ -13,13 +13,23 @@ import { FormAuth } from '@/app/login/components/FormAuth/FormAuth';
 import { useState } from 'react';
 export const LoginPage = () => {
   const [tabSelected, setTabSelected] = useState<'login' | 'signup'>('login');
+  const handleTabChange = (key: 'login' | 'signup') => {
+    setTabSelected(key);
+  };
   return (
     <div className={styles.container}>
       <div className={styles.item}>
         <div className={clsx(styles.item_content, styles.item_main)}>
           <div className={styles.item_main_header}>
             <div className={styles.item_main_header_logo}>
-              <Image src="/logo.svg" alt="BrainFlip" width={130} height={42} />
+              <Image
+                src="/logo.svg"
+                alt="BrainFlip"
+                width={130}
+                height={42}
+                priority
+                className="h-auto"
+              />
             </div>
             <div className={styles.item_main_header_tabs}>
               <Tabs
@@ -72,7 +82,10 @@ export const LoginPage = () => {
               />
             </div>
             <TextDivider />
-            <FormAuth formType={tabSelected} setTabSelected={setTabSelected} />
+            <FormAuth
+              formType={tabSelected}
+              handleTabChange={handleTabChange}
+            />
           </div>
         </div>
       </div>

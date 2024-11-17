@@ -1,27 +1,21 @@
 'use client';
+
 import Text from '@/components/Text';
 import clsx from 'clsx';
 import React, { forwardRef } from 'react';
-import { FormProvider, useForm } from 'react-hook-form';
+import { FormProvider, UseFormReturn } from 'react-hook-form';
 
 export interface FormInterface {
   children: React.ReactNode;
   onSubmit: (data: Record<string, any>) => void;
-  formMethodsRef?: (methods: ReturnType<typeof useForm>) => void; // New prop to pass form methods
+  formMethods: UseFormReturn; // Updated to directly accept formMethods
   [key: string]: any;
 }
+
 const Form = (
-  { children, onSubmit, formMethodsRef, ...props }: FormInterface,
+  { children, onSubmit, formMethods, ...props }: FormInterface,
   ref: React.Ref<HTMLFormElement>,
 ) => {
-  const formMethods = useForm<Record<string, any>>();
-  {
-    mode: 'onTouched';
-  }
-
-  // Pass form methods back to parent via callback
-  if (formMethodsRef) formMethodsRef(formMethods);
-
   return (
     <div className={clsx('w-full', props.className)}>
       {props?.title && (

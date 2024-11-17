@@ -1,4 +1,5 @@
 'use client';
+
 import Form from '@/components/Form/Form';
 import Input from '@/components/Input/Input';
 import { ModalForm } from '@/components/Modal/ModalForm';
@@ -11,38 +12,36 @@ import { parseDuration } from '@/utils/dateTime';
 import { emailRegex, passwordRegex } from '@/utils/regex';
 import { getLocalTimeZone, today } from '@internationalized/date';
 import { Button, DatePicker } from '@nextui-org/react';
-import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import React, { Dispatch, SetStateAction, useEffect } from 'react';
-import { Controller, UseFormReturn } from 'react-hook-form';
+import React, { useEffect } from 'react';
+import { Controller, useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import { Input as InputNextUI } from '@nextui-org/react';
+
 export const FormAuth = ({
   formType,
-  setTabSelected,
+  handleTabChange,
 }: {
   formType: 'login' | 'signup';
-  setTabSelected: Dispatch<SetStateAction<'login' | 'signup'>>;
+  handleTabChange: (key: 'login' | 'signup') => void;
 }) => {
   const router = useRouter();
-  const [formMethods, setFormMethods] = React.useState<UseFormReturn | null>(
-    null,
-  ); // State to hold form methods
+  const formMethods = useForm<Record<string, any>>(); // Use formMethods directly
+
   const [login, { isLoading: isLoadingLogin, error: errorLogin }] =
     useLoginMutation();
   const [register, { isLoading: isLoadingRegister, error: errorRegister }] =
     useRegisterMutation();
+
+  // Reset form when the form type changes
   useEffect(() => {
-    if (formMethods) {
-      formMethods.reset(); // Reset form when formType changes
-    }
-  }, [formType, formMethods]);
-  // const router = useRouter();
+    formMethods.reset();
+  }, [formType]);
+
   const handleLogin = async (body: LoginCredentials) => {
     try {
       const userData = await login(body).unwrap();
-      console.log('Login successful:', userData);
-      toast.success('Login successful!'); // Display a success toast
+      toast.success('Login successful!');
       document.cookie = `auth-token=${
         userData.accessToken.value
       }; path=/; max-age=${parseDuration(userData.accessToken.expiresIn)};`;
@@ -52,50 +51,46 @@ export const FormAuth = ({
       router.push('/');
     } catch (err: any) {
       toast.error(err.data.message);
-      console.error('Failed to login:', err);
     }
   };
+
   const handleRegister = async (body: RegisterCredentials) => {
     try {
       const userData = await register(body).unwrap();
-      console.log('Registration successful:', userData);
-      // Optionally, you can redirect the user or update the UI to indicate successful registration
-      toast.success('Registration successful!'); // Display a success toast
-      setTabSelected('login');
+      toast.success('Registration successful!');
+      handleTabChange('login');
     } catch (err: any) {
       toast.error(err.data.message);
-      console.error('Failed to register:', err);
     }
   };
+
   return (
     <Form
-      onSubmit={(e: Record<string, any>) => {
+      onSubmit={(data: Record<string, any>) => {
         if (formType === 'signup') {
-          if (e?.dob) {
-            const selectedDate = new Date(e.dob);
-            const currentDate = new Date();
-
-            // Validate DOB (ensure it's not in the future)
-            if (selectedDate > currentDate) {
-              return; // Stop form submission
+          if (data?.dob) {
+            const selectedDate = new Date(data.dob);
+            if (selectedDate > new Date()) {
+              toast.error('Invalid date of birth');
+              return;
             }
-            e.dob = selectedDate.toISOString();
+            data.dob = selectedDate.toISOString();
           }
-          handleRegister(e as RegisterCredentials);
-        } else if (formType === 'login') {
-          handleLogin(e as LoginCredentials);
+          handleRegister(data as RegisterCredentials);
+        } else {
+          handleLogin(data as LoginCredentials);
         }
       }}
-      formMethodsRef={setFormMethods}
+      formMethods={formMethods} // Pass formMethods directly
     >
       {formType === 'signup' && (
         <>
           <Controller
-            name="dob" // Name for the date field
-            control={formMethods?.control} // Pass control from form methods
+            name="dob"
+            control={formMethods.control}
             render={({ field }) => (
               <DatePicker
-                {...field} // Spread the field props: value and onChange
+                {...field}
                 label={
                   <p className="text-neutral-800 dark:text-neutral-200 text-sm font-semibold flex mt-3 mb-1">
                     Birth Date (optional)
@@ -170,7 +165,7 @@ export const FormAuth = ({
         type="password"
       />
       {formType === 'login' && (
-        <p className="text-right mt-2 dark:text-white text-sm flex justify-end">
+        <div className="text-right mt-2 dark:text-white text-sm flex justify-end">
           Forgot password?{' '}
           <ModalForm
             nodeTrigger="Reset it"
@@ -187,7 +182,7 @@ export const FormAuth = ({
               placeholder="Email"
             />
           </ModalForm>
-        </p>
+        </div>
       )}
       <Button
         type="submit"
