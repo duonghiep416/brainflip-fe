@@ -38,7 +38,7 @@ export const ModalForm: React.FC<ModalFormProps> = ({
 
   return (
     <>
-      <div onClick={onOpen} className="cursor-pointer">
+      <div onClick={onOpen} className="cursor-pointer underline">
         {nodeTrigger}
       </div>
       <ModalNextUI isOpen={isOpen} onOpenChange={onOpenChange} {...props}>

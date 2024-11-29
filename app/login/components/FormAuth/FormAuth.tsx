@@ -170,7 +170,7 @@ export const FormAuth = ({
         type="password"
       />
       {formType === 'login' && (
-        <p className="text-right mt-2 dark:text-white text-sm flex justify-end">
+        <div className="text-right mt-2 dark:text-white text-sm flex justify-end">
           Forgot password?{' '}
           <ModalForm
             nodeTrigger="Reset it"
@@ -187,7 +187,7 @@ export const FormAuth = ({
               placeholder="Email"
             />
           </ModalForm>
-        </p>
+        </div>
       )}
       <Button
         type="submit"
