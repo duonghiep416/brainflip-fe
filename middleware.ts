@@ -6,6 +6,12 @@ export async function middleware(request: NextRequest) {
   const refreshToken = request.cookies.get('auth-refresh-token');
   const pathname = request.nextUrl.pathname;
 
+  // Exception for specific paths that do not require authentication
+  const exceptionPaths = ['/forgot-password/reset'];
+  if (exceptionPaths.includes(pathname)) {
+    return NextResponse.next(); // Allow the request to proceed without authentication
+  }
+
   // Bỏ qua các request đến tài nguyên tĩnh như /_next/ hoặc /favicon.ico, /logo.svg
   if (
     pathname.startsWith('/_next') || // Bỏ qua tất cả các static assets từ /_next
@@ -27,9 +33,7 @@ export async function middleware(request: NextRequest) {
           Authorization: `Bearer ${token.value}`,
         },
       });
-      const userData = await response.json();
-      console.log('data', userData);
-      console.log('response.ok', response.ok);
+
       // Check if the response is not ok (unauthorized)
       if (!response.ok) {
         // Clear the invalid token from cookies

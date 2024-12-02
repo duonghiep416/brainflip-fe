@@ -1,3 +1,4 @@
+'use client';
 import {
   Button,
   ModalBody,
@@ -11,11 +12,11 @@ import {
 import React from 'react';
 
 interface ModalFormProps {
-  nodeTrigger: React.ReactNode;
+  nodeTrigger?: React.ReactNode;
   header?: React.ReactNode;
   children: React.ReactNode;
   isCloseBtn?: boolean;
-  onSubmit: () => void;
+  onSubmit?: () => void;
   actionButtonText?: string;
   [key: string]: any;
 }
@@ -26,22 +27,28 @@ export const ModalForm: React.FC<ModalFormProps> = ({
   children,
   isCloseBtn,
   onSubmit,
-  actionButtonText = 'Action',
+  actionButtonText,
   ...props
 }) => {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
 
   const handleAction = (onClose: () => void) => {
-    onSubmit();
+    onSubmit && onSubmit();
     onClose();
   };
 
   return (
     <>
-      <div onClick={onOpen} className="cursor-pointer underline">
-        {nodeTrigger}
-      </div>
-      <ModalNextUI isOpen={isOpen} onOpenChange={onOpenChange} {...props}>
+      {nodeTrigger && (
+        <div onClick={onOpen} className="cursor-pointer underline">
+          {nodeTrigger}
+        </div>
+      )}
+      <ModalNextUI
+        isOpen={isOpen || !nodeTrigger}
+        onOpenChange={onOpenChange}
+        {...props}
+      >
         <ModalContent>
           {onClose => (
             <>
@@ -53,9 +60,11 @@ export const ModalForm: React.FC<ModalFormProps> = ({
                     Close
                   </Button>
                 )}
-                <Button color="primary" onPress={() => handleAction(onClose)}>
-                  {actionButtonText}
-                </Button>
+                {actionButtonText && (
+                  <Button color="primary" onPress={() => handleAction(onClose)}>
+                    {actionButtonText}
+                  </Button>
+                )}
               </ModalFooter>
             </>
           )}

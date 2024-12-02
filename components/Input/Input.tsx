@@ -62,7 +62,6 @@ const Input = (
   const formMethods = useFormContext();
   const generateId = useId();
   const id = props?.id || generateId;
-  const inputsGroup = formMethods?.watch(groupsRequired || []);
 
   if (!formMethods) {
     throw new Error('Input component must be used within a Form Component');
