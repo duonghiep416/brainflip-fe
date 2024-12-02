@@ -6,17 +6,23 @@ import { ModalForm } from '@/components/Modal/ModalForm';
 import {
   useLoginMutation,
   useRegisterMutation,
+  useRequestResetPasswordMutation,
 } from '@/features/auth/authApiSlice';
-import { LoginCredentials, RegisterCredentials } from '@/features/auth/types';
+import {
+  LoginCredentials,
+  RegisterCredentials,
+  RequestResetPasswordCredentials,
+} from '@/features/auth/types';
 import { parseDuration } from '@/utils/dateTime';
 import { emailRegex, passwordRegex } from '@/utils/regex';
 import { getLocalTimeZone, today } from '@internationalized/date';
 import { Button, DatePicker } from '@nextui-org/react';
 import { useRouter } from 'next/navigation';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import { Input as InputNextUI } from '@nextui-org/react';
+import { useLoading } from '@/components/Providers/LoadingProvider';
 
 export const FormAuth = ({
   formType,
@@ -27,11 +33,21 @@ export const FormAuth = ({
 }) => {
   const router = useRouter();
   const formMethods = useForm<Record<string, any>>(); // Use formMethods directly
-
+  const [emailResetPassword, setEmailResetPassword] = useState('');
+  const { showLoading, hideLoading } = useLoading();
   const [login, { isLoading: isLoadingLogin, error: errorLogin }] =
     useLoginMutation();
+
   const [register, { isLoading: isLoadingRegister, error: errorRegister }] =
     useRegisterMutation();
+
+  const [
+    requestResetPassword,
+    {
+      isLoading: isLoadingRequestResetPassword,
+      error: errorRequestResetPassword,
+    },
+  ] = useRequestResetPasswordMutation();
 
   // Reset form when the form type changes
   useEffect(() => {
@@ -63,6 +79,33 @@ export const FormAuth = ({
       toast.error(err.data.message);
     }
   };
+
+  const handleRequestResetPassword = async (
+    body: RequestResetPasswordCredentials,
+  ) => {
+    try {
+      const requestResetPasswordData = await requestResetPassword(
+        body,
+      ).unwrap();
+      toast.success(requestResetPasswordData.message, {
+        duration: 20000,
+      });
+    } catch (err: any) {
+      toast.error(err.data.message);
+    }
+  };
+
+  useEffect(() => {
+    if (isLoadingLogin || isLoadingRegister || isLoadingRequestResetPassword) {
+      showLoading();
+    } else {
+      hideLoading();
+    }
+
+    return () => {
+      hideLoading();
+    };
+  }, [isLoadingLogin, isLoadingRegister, isLoadingRequestResetPassword]);
 
   return (
     <Form
@@ -170,7 +213,7 @@ export const FormAuth = ({
           <ModalForm
             nodeTrigger="Reset it"
             onSubmit={() => {
-              console.log(1111);
+              handleRequestResetPassword({ email: emailResetPassword });
             }}
             actionButtonText="Send"
             header="Reset password"
@@ -180,6 +223,11 @@ export const FormAuth = ({
               label="Enter your email to reset password"
               labelPlacement="outside"
               placeholder="Email"
+              name="email"
+              value={emailResetPassword}
+              onChange={e => {
+                setEmailResetPassword(e.target.value);
+              }}
             />
           </ModalForm>
         </div>

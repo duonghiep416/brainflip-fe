@@ -34,3 +34,17 @@ export interface RegisterApiResponse {
   created_at: string;
   updated_at: string;
 }
+
+export interface RequestResetPasswordCredentials {
+  email: string;
+}
+
+export interface RequestResetPasswordApiResponse {
+  message: string;
+}
+
+export interface ConfirmResetPasswordCredentials {
+  newPassword: string;
+}
+
+export interface ConfirmResetPasswordApiResponse extends RegisterApiResponse {}
