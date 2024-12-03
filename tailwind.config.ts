@@ -21,6 +21,10 @@ const config: Config = {
         'neutral-black': '#092522',
         'neutral-white': '#e7e7e7',
       },
+      backgroundColor: {
+        'neutral-dark-md': '#282929',
+        'main-dark': '#1d1e1e',
+      },
     },
     screens: {
       xs: '450px',

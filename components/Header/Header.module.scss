@@ -5,8 +5,12 @@
     @apply flex gap-3 items-center;
   }
 
+  .navIconMobile {
+    @apply w-7 h-7 block sm:hidden;
+  }
+
   .nav {
-    @apply flex gap-3 font-semibold text-sm;
+    @apply flex gap-2 flex-col sm:gap-3 sm:flex-row font-semibold;
 
     .navItem {
       @apply hover:text-primary;
