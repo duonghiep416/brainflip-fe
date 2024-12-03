@@ -18,10 +18,15 @@
 
 body {
   font-family: 'Bw Modelica', sans-serif;
+  @apply text-neutral-black dark:text-neutral-white;
 }
 
 @layer utilities {
   .text-balance {
     text-wrap: balance;
   }
+}
+
+.main-container {
+  @apply mx-auto px-4 md:px-6 xl:px-7;
 }
