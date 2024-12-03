@@ -1,11 +1,14 @@
 import Image from 'next/image';
 import styles from './Header.module.scss';
 import clsx from 'clsx';
+import ThemeSwitch from '@/components/ThemeSwitch/ThemeSwitch';
+import { PiListBold } from 'react-icons/pi';
 
 export const Header = () => {
   return (
-    <header className={clsx(styles.header)}>
+    <header className={clsx(styles.header, 'dark:bg-neutral-dark-md')}>
       <div className={clsx(styles.side)}>
+        <PiListBold className={clsx(styles.navIconMobile)} />
         <Image
           src="/logo-mobile.png"
           width={42}
@@ -30,6 +33,9 @@ export const Header = () => {
             </a>
           </li>
         </ul>
+      </div>
+      <div className={clsx(styles.side)}>
+        <ThemeSwitch />
       </div>
     </header>
   );
