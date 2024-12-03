@@ -18,6 +18,8 @@ const config: Config = {
       },
       colors: {
         primary: '#43b1a4',
+        'neutral-black': '#092522',
+        'neutral-white': '#e7e7e7',
       },
     },
     screens: {

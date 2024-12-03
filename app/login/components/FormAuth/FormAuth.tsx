@@ -208,7 +208,7 @@ export const FormAuth = ({
         type="password"
       />
       {formType === 'login' && (
-        <div className="text-right mt-2 dark:text-white text-sm flex justify-end">
+        <div className="text-right mt-2 text-sm flex justify-end">
           Forgot password?{' '}
           <ModalForm
             nodeTrigger="Reset it"
