@@ -1,3 +1,5 @@
+import { UserRole } from '@/enums/roles.enums';
+
 export interface LoginCredentials {
   email: string;
   password: string;
@@ -19,7 +21,7 @@ export interface RegisterCredentials {
   email: string;
   name: string;
   dob?: string;
-  role?: number;
+  role?: UserRole;
   password: string;
 }
 
@@ -30,7 +32,7 @@ export interface RegisterApiResponse {
   dob?: string | null;
   last_login?: string | null;
   id: string;
-  role?: number;
+  role?: UserRole;
   created_at: string;
   updated_at: string;
 }

@@ -17,6 +17,7 @@ export const Navbar = () => {
   const toggleNav = () => {
     setIsNavOpen(!isNavOpen);
   };
+
   return (
     <div className={clsx(styles.sideNav)}>
       <PiListBold className={clsx(styles.navIconMobile)} onClick={toggleNav} />
