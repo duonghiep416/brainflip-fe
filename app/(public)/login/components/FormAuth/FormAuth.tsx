@@ -72,7 +72,7 @@ export const FormAuth = ({
 
   const handleRegister = async (body: RegisterCredentials) => {
     try {
-      const userData = await register(body).unwrap();
+      await register(body).unwrap();
       toast.success('Registration successful!');
       handleTabChange('login');
     } catch (err: any) {

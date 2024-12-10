@@ -1,5 +1,7 @@
+import { endpoints } from '@/configs/endpoints';
 import { SERVER_URL } from '@/configs/site.config';
-import { getTokenFromCookie } from '@/utils/getToken';
+import { GetMeApiResponse } from '@/features/user/types';
+import { getTokenFromCookie } from '@/utils/token';
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 
 export const userApiSlice = createApi({
@@ -15,10 +17,9 @@ export const userApiSlice = createApi({
     },
   }),
   endpoints: builder => ({
-    // Chuyển từ mutation sang query cho GET request
-    getMe: builder.query({
+    getMe: builder.query<GetMeApiResponse, void>({
       query: () => ({
-        url: '/users/me',
+        url: endpoints.me,
         method: 'GET', // Sử dụng GET cho việc lấy dữ liệu
       }),
     }),

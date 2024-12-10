@@ -10,10 +10,10 @@
   },
   "dependencies": {
     "@internationalized/date": "^3.5.5",
-    "@nextui-org/react": "^2.4.8",
+    "@nextui-org/react": "^2.6.5",
     "@reduxjs/toolkit": "^2.2.7",
     "clsx": "^2.1.1",
-    "framer-motion": "^11.7.0",
+    "framer-motion": "^11.13.3",
     "next": "^14.2.13",
     "react": "^18",
     "react-dom": "^18",

@@ -1,4 +1,4 @@
-import { LoginPage } from '@/app/login/components/LoginPage/LoginPage';
+import { LoginPage } from '@/app/(public)/login/components/LoginPage/LoginPage';
 
 export const metadata = {
   title: '#1 Free Quizlet Alternative | BrainFlip',
