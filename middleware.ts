@@ -28,7 +28,7 @@ export async function middleware(request: NextRequest) {
   // Nếu có token, call api lấy thông tin người dùng để kiểm tra token
   if (token) {
     try {
-      const response = await fetch(`${SERVER_URL}/users/me`, {
+      const response = await fetch(`${SERVER_URL}/auth/validate-token`, {
         headers: {
           Authorization: `Bearer ${token.value}`,
         },
