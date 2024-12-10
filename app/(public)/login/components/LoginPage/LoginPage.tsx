@@ -9,8 +9,9 @@ import { SocialButton } from '@/components/SocialButton/SocialButton';
 import { SiFacebook } from 'react-icons/si';
 import { FaApple } from 'react-icons/fa';
 import TextDivider from '@/components/TextDivider/TextDivider';
-import { FormAuth } from '@/app/login/components/FormAuth/FormAuth';
 import { useState } from 'react';
+import { FormAuth } from '@/app/(public)/login/components/FormAuth/FormAuth';
+
 export const LoginPage = () => {
   const [tabSelected, setTabSelected] = useState<'login' | 'signup'>('login');
   const handleTabChange = (key: 'login' | 'signup') => {

@@ -1,5 +1,5 @@
+import { FormResetPassword } from '@/app/(public)/forgot-password/reset/FormResetPassword';
 import { ModalForm } from '@/components/Modal/ModalForm';
-import { FormResetPassword } from '@/app/forgot-password/reset/FormResetPassword';
 export const metadata = {
   title: 'Forgot Password | Brain Flip',
   description: 'Login to your account',

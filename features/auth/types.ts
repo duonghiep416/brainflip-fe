@@ -50,3 +50,7 @@ export interface ConfirmResetPasswordCredentials {
 }
 
 export interface ConfirmResetPasswordApiResponse extends RegisterApiResponse {}
+
+export interface LogoutCredentials {
+  refreshToken: string;
+}

@@ -6,11 +6,13 @@ import {
   ConfirmResetPasswordCredentials,
   LoginApiResponse,
   LoginCredentials,
+  LogoutCredentials,
   RegisterApiResponse,
   RegisterCredentials,
   RequestResetPasswordApiResponse,
   RequestResetPasswordCredentials,
 } from '@/features/auth/types';
+import { getTokenFromCookie } from '@/utils/token';
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 
 export const authApiSlice = createApi({
@@ -18,7 +20,7 @@ export const authApiSlice = createApi({
   baseQuery: fetchBaseQuery({
     baseUrl: SERVER_URL, // Thay thế bằng URL API của bạn
     prepareHeaders: (headers, { getState }) => {
-      const token = localStorage.getItem('token'); // Lấy token từ localStorage
+      const token = getTokenFromCookie();
       if (token) {
         headers.set('Authorization', `Bearer ${token}`);
       }
@@ -67,6 +69,16 @@ export const authApiSlice = createApi({
         };
       },
     }),
+
+    logout: builder.mutation<void, LogoutCredentials>({
+      query: credentials => {
+        return {
+          url: endpoints.logout,
+          method: 'POST',
+          body: credentials,
+        };
+      },
+    }),
   }),
 });
 
@@ -75,4 +87,5 @@ export const {
   useRegisterMutation,
   useRequestResetPasswordMutation,
   useConfirmResetPasswordMutation,
+  useLogoutMutation,
 } = authApiSlice;
