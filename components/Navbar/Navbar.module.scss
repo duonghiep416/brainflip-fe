@@ -44,3 +44,7 @@
     @apply py-1 sm:py-4 w-full sm:w-fit inline-block;
   }
 }
+
+:global(.dark) .nav {
+  @apply bg-neutral-dark-md;
+}
