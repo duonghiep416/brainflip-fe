@@ -12,7 +12,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <main className="pt-14 lg:pt-16 main-container min-h-screen dark:main-dark">
+    <main className="pt-14 lg:pt-16 main-container min-h-screen dark:bg-main-dark">
       <Header />
       {children}
     </main>

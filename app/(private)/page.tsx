@@ -1,3 +1,9 @@
+import { Widgets } from '@/components/Widgets/Widgets';
+
 export default function HomePage() {
-  return <>Home page</>;
+  return (
+    <>
+      <Widgets />
+    </>
+  );
 }

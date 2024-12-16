@@ -28,6 +28,7 @@ export const Navbar = () => {
           height={42}
           alt="Brain Flip Logo"
           className="max-h-9"
+          priority
         />
       </Link>
       <IoIosCloseCircleOutline
