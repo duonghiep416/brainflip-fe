@@ -1,6 +1,5 @@
 // src/features/auth/authApiSlice.ts
 import { endpoints } from '@/configs/endpoints';
-import { SERVER_URL } from '@/configs/site.config';
 import {
   ConfirmResetPasswordApiResponse,
   ConfirmResetPasswordCredentials,
@@ -12,21 +11,12 @@ import {
   RequestResetPasswordApiResponse,
   RequestResetPasswordCredentials,
 } from '@/features/auth/types';
-import { getTokenFromCookie } from '@/utils/token';
-import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
+import baseQuery from '@/features/baseQuery';
+import { createApi } from '@reduxjs/toolkit/query/react';
 
 export const authApiSlice = createApi({
   reducerPath: 'authApi',
-  baseQuery: fetchBaseQuery({
-    baseUrl: SERVER_URL, // Thay thế bằng URL API của bạn
-    prepareHeaders: (headers, { getState }) => {
-      const token = getTokenFromCookie();
-      if (token) {
-        headers.set('Authorization', `Bearer ${token}`);
-      }
-      return headers;
-    },
-  }),
+  baseQuery,
   endpoints: builder => ({
     login: builder.mutation<LoginApiResponse, LoginCredentials>({
       query: credentials => ({

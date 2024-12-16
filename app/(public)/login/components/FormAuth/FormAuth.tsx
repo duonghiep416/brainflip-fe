@@ -57,7 +57,6 @@ export const FormAuth = ({
   const handleLogin = async (body: LoginCredentials) => {
     try {
       const userData = await login(body).unwrap();
-      toast.success('Login successful!');
       document.cookie = `auth-token=${
         userData.accessToken.value
       }; path=/; max-age=${parseDuration(userData.accessToken.expiresIn)};`;

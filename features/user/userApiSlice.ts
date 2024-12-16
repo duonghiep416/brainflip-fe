@@ -1,21 +1,12 @@
 import { endpoints } from '@/configs/endpoints';
 import { SERVER_URL } from '@/configs/site.config';
+import baseQuery from '@/features/baseQuery';
 import { GetMeApiResponse } from '@/features/user/types';
-import { getTokenFromCookie } from '@/utils/token';
-import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
+import { createApi } from '@reduxjs/toolkit/query/react';
 
 export const userApiSlice = createApi({
   reducerPath: 'userApi',
-  baseQuery: fetchBaseQuery({
-    baseUrl: SERVER_URL,
-    prepareHeaders: (headers, { getState }) => {
-      const token = getTokenFromCookie();
-      if (token) {
-        headers.set('Authorization', `Bearer ${token}`);
-      }
-      return headers;
-    },
-  }),
+  baseQuery,
   endpoints: builder => ({
     getMe: builder.query<GetMeApiResponse, void>({
       query: () => ({
