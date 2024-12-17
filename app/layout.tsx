@@ -17,6 +17,10 @@ export default function RootLayout({
   return (
     <html lang="en" className="light" data-theme="light">
       <body>
+        <div
+          id="header-portal"
+          className="fixed top-0 left-0 right-0 h-14 lg:h-16 z-50"
+        ></div>
         <Toaster richColors position="top-center" />
         <Providers>{children}</Providers>
       </body>

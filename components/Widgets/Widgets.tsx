@@ -12,6 +12,7 @@ export const Widgets = () => {
           content: (
             <div className="flex gap-6">
               <LearningSection />
+              <div>abc</div>
             </div>
           ),
         },
