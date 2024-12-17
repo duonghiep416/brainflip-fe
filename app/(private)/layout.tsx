@@ -14,7 +14,7 @@ export default function RootLayout({
   return (
     <main className="pt-14 lg:pt-16 main-container min-h-screen dark:bg-main-dark">
       <Header />
-      {children}
+      <div className="container">{children}</div>
     </main>
   );
 }

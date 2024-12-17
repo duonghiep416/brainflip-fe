@@ -1,0 +1,11 @@
+.studyCardBody {
+  @apply flex-row items-center justify-between gap-5;
+  .metadata {
+    .title {
+      @apply truncate font-bold;
+    }
+    .description {
+      @apply truncate text-xs;
+    }
+  }
+}

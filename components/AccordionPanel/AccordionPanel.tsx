@@ -3,6 +3,7 @@
 import clsx from 'clsx';
 import React, { useState, useEffect } from 'react';
 import { FaAnglesDown } from 'react-icons/fa6';
+import styles from './AccordionPanel.module.scss';
 
 interface Section {
   id: string;
@@ -31,36 +32,33 @@ const AccordionPanel: React.FC<AccordionPanelProps> = ({ sections }) => {
   };
 
   return (
-    <div className="w-full relative z-10">
-      {' '}
-      {/* z-10 thấp hơn z-50 của Navbar */}
+    <div className={styles.accordionContainer}>
       {sections.map(section => {
         const isOpen = openSections.includes(section.id);
         return (
-          <div key={section.id} className="relative z-10">
-            {/* Header của AccordionItem */}
+          <div key={section.id} className={styles.accordionItem}>
             <button
               onClick={() => toggleSection(section.id)}
-              className="flex justify-between items-center w-full p-4 text-left focus:outline-none relative z-20"
+              className={styles.accordionButton}
             >
-              <span className="font-bold">{section.title}</span>
+              <span className={styles.accordionTitle}>{section.title}</span>
               <span
                 className={clsx(
-                  'transform transition-transform duration-300',
-                  isOpen ? 'rotate-0' : 'rotate-180',
+                  styles.icon,
+                  isOpen ? styles.iconOpen : styles.iconClosed,
                 )}
               >
                 <FaAnglesDown />
               </span>
             </button>
 
-            {/* Nội dung có animation mở/đóng */}
             <div
-              className={`transition-all duration-300 overflow-hidden ${
-                isOpen ? 'max-h-96' : 'max-h-0'
-              } relative z-10`}
+              className={clsx(
+                styles.accordionContent,
+                isOpen ? styles.contentOpen : styles.contentClosed,
+              )}
             >
-              <div className="p-4">{section.content}</div>
+              <div className={styles.contentInner}>{section.content}</div>
             </div>
           </div>
         );
