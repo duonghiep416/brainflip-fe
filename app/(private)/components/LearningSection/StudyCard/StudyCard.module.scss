@@ -1,11 +1,16 @@
 .studyCardBody {
-  @apply flex-row items-center justify-between gap-5;
+  @apply flex-row items-center justify-between gap-1 xs:gap-5;
+
+  .flexCs {
+    @apply flex gap-2 xs:gap-4 items-center;
+  }
+
   .metadata {
     .title {
-      @apply truncate font-bold;
+      @apply truncate font-bold w-32 xs:w-52 sm:w-72 md:w-52 lg:w-32 xl:w-48 2xl:w-56;
     }
     .description {
-      @apply truncate text-xs;
+      @apply truncate text-xs w-32 xs:w-52 sm:w-72 md:w-52 lg:w-32 xl:w-48 2xl:w-56;
     }
   }
 }

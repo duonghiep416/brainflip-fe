@@ -7,11 +7,6 @@ import clsx from 'clsx';
 import styles from './CalendarSection.module.scss';
 
 export const CalendarSection = () => {
-  const { data, isLoading, isError } = useGetFlashcardSetQuery();
-
-  const flashcardSets = data ? data.data : [];
-
-  console.log('flashcardSetData', flashcardSets);
   return (
     <Calendar
       showMonthAndYearPickers

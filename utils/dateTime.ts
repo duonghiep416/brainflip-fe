@@ -1,3 +1,5 @@
+import moment from 'moment';
+
 export function parseDuration(duration: string) {
   if (!duration || duration.length < 2) return 0; // Trả về 0 nếu chuỗi không hợp lệ
 
@@ -18,4 +20,8 @@ export function parseDuration(duration: string) {
     default:
       return 0; // Trả về 0 nếu đơn vị không hợp lệ
   }
+}
+
+export function formatDate(date: string) {
+  return moment(date).format('MM/DD/YYYY');
 }

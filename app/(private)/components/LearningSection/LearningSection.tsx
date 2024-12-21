@@ -9,7 +9,6 @@ export const LearningSection = () => {
 
   const flashcardSets = data ? data.data : [];
 
-  console.log('flashcardSetData', flashcardSets);
   return (
     <>
       <Card
@@ -36,7 +35,7 @@ export const LearningSection = () => {
               className="dark:bg-main-dark"
             />
           </Tabs>
-          <div className="w-full flex gap-3 items-center max-h-56 overflow-y-auto flex-wrap bg-transparent">
+          <div className="w-full flex gap-3 items-center max-h-56 overflow-y-auto flex-wrap bg-transparent pb-3">
             {flashcardSets.map(flashcardSet => {
               return (
                 <StudyCard flashcardSet={flashcardSet} key={flashcardSet.id} />

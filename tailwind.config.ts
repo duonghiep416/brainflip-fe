@@ -13,8 +13,8 @@ const config: Config = {
     container: {
       center: true,
       padding: {
-        DEFAULT: '1rem',
-        sm: '.5rem',
+        DEFAULT: '.3rem',
+        sm: '0',
         lg: '0',
         xl: '1rem',
         '2xl': '3rem',
@@ -34,6 +34,7 @@ const config: Config = {
       backgroundColor: {
         'neutral-dark-md': '#282929',
         'main-dark': '#1d1e1e',
+        'main-light': '#f4f4f4',
       },
     },
     screens: {
@@ -43,7 +44,6 @@ const config: Config = {
       lg: '992px',
       xl: '1200px', // PC
       '2xl': '1400px',
-      // => @media (min-width: 1400px) { ... }
     },
   },
   darkMode: 'class',

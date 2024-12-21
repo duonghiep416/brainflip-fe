@@ -32,15 +32,15 @@ body {
 }
 
 *::-webkit-scrollbar {
-  width: 0px;
+  width: 3px;
 }
 
 *::-webkit-scrollbar-track {
-  background: #2b3347;
+  background: #7d8db6;
 }
 
 *::-webkit-scrollbar-thumb {
-  background-color: #087f5b;
+  background-color: #42c9a0b2;
   border-radius: 20px;
   border: 1px solid #ffffff00;
 }

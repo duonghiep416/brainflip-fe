@@ -1,0 +1,31 @@
+.container {
+  @apply lg:p-6;
+}
+
+.buttonContainer {
+  @apply py-6;
+}
+
+.homeButton {
+  @apply w-fit;
+}
+
+.homeIcon {
+  @apply mr-2 text-lg;
+}
+
+.homeButtonText {
+  @apply font-bold;
+}
+
+.title {
+  @apply text-2xl xl:text-3xl font-bold line-clamp-2 break-words;
+}
+
+.description {
+  @apply mt-3 text-base;
+}
+
+.flashcardSetId {
+  @apply mt-4;
+}
