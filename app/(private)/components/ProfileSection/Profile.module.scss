@@ -1,0 +1,27 @@
+.profileSection {
+  @apply hidden lg:block;
+
+  .coverImgContainer {
+    @apply relative bg-lime-100 h-28;
+  }
+
+  .avatarContainer {
+    @apply absolute -translate-x-1/2 -translate-y-1/2 left-1/2 top-full w-16 h-16;
+  }
+
+  .infoContainer {
+    @apply pt-10;
+
+    .name {
+      @apply font-bold text-sm text-center;
+    }
+
+    .metadata {
+      @apply text-xs mt-1 text-center;
+    }
+  }
+
+  .avatar {
+    @apply rounded-full border border-white;
+  }
+}

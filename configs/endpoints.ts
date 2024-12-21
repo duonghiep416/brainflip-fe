@@ -6,4 +6,5 @@ export const endpoints = {
   confirmResetPassword: '/auth/forgot-password/reset',
   me: '/users/me',
   getFlashcardSet: '/flashcard-sets',
+  getFlashcard: '/flashcards',
 };

@@ -10,6 +10,16 @@ const config: Config = {
     './node_modules/@nextui-org/theme/dist/**/*.{js,ts,jsx,tsx}',
   ],
   theme: {
+    container: {
+      center: true,
+      padding: {
+        DEFAULT: '.3rem',
+        sm: '0',
+        lg: '0',
+        xl: '1rem',
+        '2xl': '3rem',
+      },
+    },
     extend: {
       backgroundImage: {
         'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
@@ -24,16 +34,16 @@ const config: Config = {
       backgroundColor: {
         'neutral-dark-md': '#282929',
         'main-dark': '#1d1e1e',
+        'main-light': '#f4f4f4',
       },
     },
     screens: {
       xs: '450px',
       sm: '576px',
-      md: '768px',
+      md: '768px', // Tablet
       lg: '992px',
-      xl: '1200px',
+      xl: '1200px', // PC
       '2xl': '1400px',
-      // => @media (min-width: 1400px) { ... }
     },
   },
   darkMode: 'class',
