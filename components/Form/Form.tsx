@@ -35,7 +35,6 @@ const Form = (
         <form
           noValidate
           onSubmit={e => {
-            e.preventDefault();
             formMethods.handleSubmit(onSubmit)(e);
           }}
           className={clsx('w-full', props.classNameForm)}
