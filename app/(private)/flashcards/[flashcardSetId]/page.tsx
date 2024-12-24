@@ -74,22 +74,22 @@ export async function generateMetadata(
 export default async function FlashcardPage({ params }: FlashcardsPageProps) {
   const flashcard = await fetchFlashcardSet(params.flashcardSetId);
   return (
-    <div className={styles.container}>
-      <div className="py-6">
-        <Button
-          as={Link}
-          href="/"
-          size="md"
-          radius="full"
-          className={styles.homeButton}
-          startContent={<FcHome className={styles.homeIcon} />}
-        >
-          <span className="font-bold">Home</span>
-        </Button>
-      </div>
+    <div>
       <h1 className={styles.title}>{flashcard.title}</h1>
       <h2 className={styles.description}>{flashcard.description}</h2>
-      <TermList />
+      <TermList type="view" />
+      <div className="flex justify-center">
+        <Button
+          as={Link}
+          href={`/flashcards/${flashcard.id}/edit`}
+          radius="full"
+          color="primary"
+          className="font-bold my-10 justify-center"
+          size="md"
+        >
+          Add or Edit Terms
+        </Button>
+      </div>
     </div>
   );
 }

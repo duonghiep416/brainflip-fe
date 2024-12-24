@@ -6,6 +6,7 @@ import { Navbar } from '@/components/Navbar/Navbar';
 import ProfilePopover from '@/components/ProfilePopover/ProfilePopover';
 import { useEffect, useState } from 'react';
 import ReactDOM from 'react-dom';
+import AddPopover from '@/components/AddPopover/AddPopover';
 export const Header = () => {
   const [isClient, setIsClient] = useState(false);
 
@@ -22,6 +23,7 @@ export const Header = () => {
     <header className={clsx(styles.header, 'dark:bg-neutral-dark-md')}>
       <Navbar />
       <div className={clsx(styles.side)}>
+        <AddPopover />
         <ThemeSwitch />
         <ProfilePopover />
       </div>

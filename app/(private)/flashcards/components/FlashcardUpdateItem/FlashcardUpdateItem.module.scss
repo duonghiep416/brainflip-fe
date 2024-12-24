@@ -1,0 +1,19 @@
+.container {
+  @apply w-full p-4 min-h-48 bg-neutral-white rounded-2xl mb-8 shadow-md;
+
+  .header {
+    @apply flex justify-between items-center;
+
+    .title {
+      @apply text-lg font-semibold;
+    }
+
+    .cta {
+      @apply flex gap-2;
+    }
+  }
+
+  .content {
+    @apply mt-4 flex flex-col gap-4 lg:flex-row lg:gap-8;
+  }
+}

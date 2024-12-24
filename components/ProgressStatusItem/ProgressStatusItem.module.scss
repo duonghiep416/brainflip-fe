@@ -1,0 +1,19 @@
+.progressStatusItemContainer {
+  @apply min-w-36 max-w-48 rounded-full p-2 flex items-center gap-1;
+}
+
+.new {
+  @apply bg-red-300/20;
+}
+
+.learning {
+  @apply bg-violet-300/20;
+}
+
+.almostDone {
+  @apply bg-blue-300/20;
+}
+
+.mastered {
+  @apply bg-green-300/20;
+}
