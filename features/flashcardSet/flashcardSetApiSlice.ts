@@ -7,11 +7,21 @@ export const flashcardSetApiSlice = createApi({
   reducerPath: 'flashcardSets',
   baseQuery,
   endpoints: builder => ({
-    getFlashcardSet: builder.query<GetFlashcardSetResponse, void>({
-      query: () => ({
-        url: endpoints.getFlashcardSet,
-        method: 'GET',
-      }),
+    getFlashcardSet: builder.query<
+      GetFlashcardSetResponse,
+      {
+        flashcardSetId?: string;
+      }
+    >({
+      query: ({ flashcardSetId }) => {
+        const url = flashcardSetId
+          ? `${endpoints.getFlashcardSet}/${flashcardSetId}`
+          : endpoints.getFlashcardSet;
+        return {
+          url,
+          method: 'GET',
+        };
+      },
     }),
   }),
 });

@@ -1,5 +1,6 @@
 'use client';
 
+import SecondaryHeader from '@/components/SecondaryHeader/SecondaryHeader';
 import TermListItem from './TermListItem/TermListItem';
 import {
   useGetFlashcardQuery,
@@ -10,12 +11,18 @@ import { Button } from '@nextui-org/react';
 import { useParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
+import { HEIGHT_SHOW_2ND_HEADER } from '@/configs/site.config';
+import { IoCloudUploadOutline } from 'react-icons/io5';
+import BackBtn from '@/app/(private)/flashcards/components/BackBtn/BackBtn';
+import { FlashcardSet } from '@/features/flashcardSet/types';
+import { faker } from '@faker-js/faker';
 
 export interface TermCardPropsI {
   type?: 'view' | 'edit' | 'add';
+  setInfo?: FlashcardSet;
 }
 
-const TermList = ({ type = 'view' }: TermCardPropsI) => {
+const TermList = ({ type = 'view', setInfo }: TermCardPropsI) => {
   const { flashcardSetId } = useParams<{ flashcardSetId: string }>();
 
   const { data } = useGetFlashcardQuery(flashcardSetId);
@@ -41,7 +48,7 @@ const TermList = ({ type = 'view' }: TermCardPropsI) => {
     setLocalData(prev => {
       if (action === 'add') {
         const newElement = {
-          id: crypto.randomUUID(), // Tạo UUID cho id
+          id: faker.string.uuid(), // Tạo UUID cho id
           term: '', // Term rỗng
           definition: '', // Definition rỗng
           order: null, // Tạm thời chưa cần cập nhật thứ tự
@@ -66,16 +73,48 @@ const TermList = ({ type = 'view' }: TermCardPropsI) => {
     });
   };
 
+  //Xử lý scroll khi cuộn hiện header
   useEffect(() => {
-    return () => {
-      if (type === 'edit') {
-        dispatch(flashcardApiSlice.util.invalidateTags(['Flashcards']));
+    const headerElement = document.getElementById('header-secondary-portal');
+    const handleScroll = () => {
+      if (headerElement) {
+        if (window.scrollY > HEIGHT_SHOW_2ND_HEADER) {
+          headerElement.classList.add('show');
+        } else {
+          headerElement.classList.remove('show');
+        }
       }
+    };
+
+    document.addEventListener('scroll', handleScroll);
+
+    return () => {
+      document.removeEventListener('scroll', handleScroll);
     };
   }, []);
 
   return (
     <>
+      <SecondaryHeader
+        startContent={
+          <div className="flex-center-vertical">
+            <BackBtn />
+            {setInfo && (
+              <h1 className="text-xl font-bold text-center mx-5">
+                {setInfo.title}
+              </h1>
+            )}
+          </div>
+        }
+        endContent={
+          type !== 'view' && (
+            <Button color="primary">
+              <IoCloudUploadOutline size={18} />
+              Save
+            </Button>
+          )
+        }
+      />
       <div className="flex flex-col gap-4 mt-20">
         {localData.map((flashcard, index) => (
           <TermListItem

@@ -44,3 +44,8 @@ body {
   border-radius: 20px;
   border: 1px solid #ffffff00;
 }
+
+.show {
+  opacity: 1 !important;
+  visibility: visible !important;
+}

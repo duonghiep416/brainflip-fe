@@ -19,7 +19,7 @@
 }
 
 .divider {
-  @apply w-[200px] h-[1px] my-3 md:my-0 md:mx-3 md:w-[1px] bg-neutral-400 md:min-h-32;
+  @apply w-[200px] h-[1px] my-2 md:my-0 md:mx-3 md:w-[1px] bg-neutral-400 md:min-h-32;
 }
 
 .definition {
@@ -31,7 +31,7 @@
 }
 
 .cta {
-  @apply mt-2 flex justify-end items-center gap-2;
+  @apply flex justify-end items-center gap-2;
 }
 
 .toggleButton {
@@ -43,10 +43,10 @@
 }
 
 .buttonWrapper {
-  @apply absolute -top-6 -right-7 w-full flex justify-end;
+  @apply absolute top-0 left-0 right-0 -translate-y-3/4 flex z-20 items-center justify-center;
 
   .addButton {
-    @apply transition-all opacity-0 invisible;
+    @apply transition-all lg:opacity-0 lg:invisible;
   }
 
   &:hover .addButton {

@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@faker-js/faker": "^9.3.0",
     "@internationalized/date": "^3.5.5",
     "@nextui-org/react": "^2.6.5",
     "@reduxjs/toolkit": "^2.2.7",

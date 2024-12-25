@@ -5,7 +5,7 @@ import { useGetFlashcardSetQuery } from '@/features/flashcardSet/flashcardSetApi
 import { Card, CardBody, Tab, Tabs } from '@nextui-org/react';
 
 export const LearningSection = () => {
-  const { data, isLoading, isError } = useGetFlashcardSetQuery();
+  const { data, isLoading, isError } = useGetFlashcardSetQuery({});
 
   const flashcardSets = data ? data.data : [];
 

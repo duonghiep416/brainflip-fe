@@ -4,10 +4,17 @@ import Input from '@/components/Input/Input';
 import { useForm } from 'react-hook-form';
 import styles from './AddUpdateFlashcardSetForm.module.scss';
 import clsx from 'clsx';
-import FlashcardUpdateItem from '@/app/(private)/flashcards/components/FlashcardUpdateItem/FlashcardUpdateItem';
+
 import TermList from '@/app/(private)/flashcards/[flashcardSetId]/components/TermList/TermList';
-import { usePathname } from 'next/navigation';
+import { useParams, usePathname } from 'next/navigation';
+import { useGetFlashcardSetQuery } from '@/features/flashcardSet/flashcardSetApiSlice';
+import { FlashcardSet } from '@/features/flashcardSet/types';
+
 const AddUpdateFlashcardSetForm = () => {
+  const { flashcardSetId } = useParams();
+  const { data } = useGetFlashcardSetQuery({
+    flashcardSetId: flashcardSetId as string,
+  });
   const formMethods = useForm<Record<string, any>>();
   const pathname = usePathname();
   return (
@@ -40,6 +47,8 @@ const AddUpdateFlashcardSetForm = () => {
               ? 'edit'
               : 'view'
           }
+          // @ts-ignore
+          setInfo={data as FlashcardSet}
         />
       </Form>
     </>
