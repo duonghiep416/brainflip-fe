@@ -7,4 +7,6 @@ export const endpoints = {
   me: '/users/me',
   getFlashcardSet: '/flashcard-sets',
   getFlashcard: '/flashcards',
+  addFlashcards: '/flashcard-sets',
+  createFlashcards: '/flashcard-sets',
 };

@@ -15,7 +15,20 @@ export const flashcardApiSlice = createApi({
       }),
       providesTags: ['Flashcards'],
     }),
+
+    addFlashcards: builder.mutation<
+      void,
+      { id: string; body: Record<string, any> }
+    >({
+      query: ({ id, body }) => ({
+        url: `${endpoints.addFlashcards}/${id}/flashcards`,
+        method: 'POST',
+        body,
+      }),
+      invalidatesTags: ['Flashcards'],
+    }),
   }),
 });
 
-export const { useGetFlashcardQuery } = flashcardApiSlice;
+export const { useGetFlashcardQuery, useAddFlashcardsMutation } =
+  flashcardApiSlice;

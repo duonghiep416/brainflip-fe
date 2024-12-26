@@ -1,6 +1,6 @@
 import { useState, useRef, useLayoutEffect } from 'react';
 import { Flashcard } from '@/features/flashcard/types';
-import { Card, CardBody, Divider, Button, CardHeader } from '@nextui-org/react';
+import { Card, CardBody, Button, CardHeader } from '@nextui-org/react';
 import styles from './TermListItem.module.scss';
 import {
   RiCollapseDiagonalFill,
@@ -9,12 +9,15 @@ import {
 } from 'react-icons/ri';
 import clsx from 'clsx';
 import ProgressStatusItem from '@/components/ProgressStatusItem/ProgressStatusItem';
-import { TermCardPropsI } from '@/app/(private)/flashcards/[flashcardSetId]/components/TermList/TermList';
+import { TermListProps } from '@/app/(private)/flashcards/[flashcardSetId]/components/TermList/TermList';
 import { IoAdd } from 'react-icons/io5';
-interface TermListItemI extends TermCardPropsI {
+
+interface TermListItemI extends TermListProps {
   flashcard: Flashcard;
   order: number;
   handleActionFlashcard: (action: 'add' | 'delete', order: number) => void;
+  handleChangeFlashcard: (index: number, key: string, value: any) => void;
+  handleSubmitData: () => void;
 }
 
 const TermListItem = ({
@@ -22,9 +25,9 @@ const TermListItem = ({
   order,
   type = 'view',
   handleActionFlashcard,
+  handleChangeFlashcard,
 }: TermListItemI) => {
   const [isExpanded, setIsExpanded] = useState(false);
-
   const [hasOverflow, setHasOverflow] = useState(false);
   const definitionRef = useRef<HTMLParagraphElement>(null);
 
@@ -95,11 +98,17 @@ const TermListItem = ({
             className={clsx(
               styles.term,
               type !== 'view' && styles.editable,
-              type !== 'view' && 'dark:bg-main-dark',
+              type !== 'view' && 'dark:bg-main-dark editable',
             )}
             spellCheck={false}
             contentEditable={type !== 'view'}
             suppressContentEditableWarning
+            onBlur={e => {
+              // Nếu có thay đổi => gọi handleChangeFlashcard (debounce)
+              if (e.target.innerText !== flashcard.term) {
+                handleChangeFlashcard(order - 1, 'term', e.target.innerText);
+              }
+            }}
           >
             {flashcard.term}
           </h3>
@@ -112,11 +121,20 @@ const TermListItem = ({
                 [styles.collapsed]: !isExpanded,
               },
               type !== 'view' && styles.editable,
-              type !== 'view' && 'dark:bg-main-dark',
+              type !== 'view' && 'dark:bg-main-dark editable',
             )}
             contentEditable={type !== 'view'}
             spellCheck={false}
             suppressContentEditableWarning
+            onBlur={e => {
+              if (e.target.innerText !== flashcard.definition) {
+                handleChangeFlashcard(
+                  order - 1,
+                  'definition',
+                  e.target.innerText,
+                );
+              }
+            }}
           >
             {flashcard.definition}
           </p>

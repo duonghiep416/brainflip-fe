@@ -4,6 +4,7 @@ export interface Flashcard {
   definition: string;
   created_at: string; // hoặc Date, tùy theo bạn muốn parse dữ liệu thành Date hay để nguyên dạng string
   updated_at: string; // tương tự như trên
+  [key: string]: any;
 }
 
 export interface Metadata {
@@ -16,4 +17,10 @@ export interface Metadata {
 export interface FlashcardResponse {
   data: Flashcard[];
   metadata: Metadata;
+}
+
+export interface AddFlashcardsRequest {
+  flashcards: Flashcard[];
+  title: string;
+  description?: string;
 }
