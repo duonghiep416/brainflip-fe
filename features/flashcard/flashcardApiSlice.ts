@@ -25,10 +25,40 @@ export const flashcardApiSlice = createApi({
         method: 'POST',
         body,
       }),
-      invalidatesTags: ['Flashcards'],
+    }),
+
+    removeFlashcards: builder.mutation<
+      void,
+      {
+        id: string;
+        body: {
+          ids: string[];
+        };
+      }
+    >({
+      query: ({ id, body }) => ({
+        url: `${endpoints.addFlashcards}/${id}/flashcards`,
+        method: 'DELETE',
+        body,
+      }),
+    }),
+
+    updateFlashcards: builder.mutation<
+      void,
+      { id: string; body: Record<string, any> }
+    >({
+      query: ({ id, body }) => ({
+        url: `${endpoints.addFlashcards}/${id}/flashcards`,
+        method: 'PATCH',
+        body,
+      }),
     }),
   }),
 });
 
-export const { useGetFlashcardQuery, useAddFlashcardsMutation } =
-  flashcardApiSlice;
+export const {
+  useGetFlashcardQuery,
+  useAddFlashcardsMutation,
+  useRemoveFlashcardsMutation,
+  useUpdateFlashcardsMutation,
+} = flashcardApiSlice;

@@ -23,7 +23,7 @@
 }
 
 .definition {
-  @apply text-sm sm:text-base md:text-lg font-semibold h-full basis-3/5 lg:basis-4/5 break-words text-justify pr-2;
+  @apply text-sm sm:text-base md:text-lg font-medium h-full basis-3/5 lg:basis-4/5  whitespace-pre-wrap break-words text-justify pr-2;
 
   &.collapsed {
     @apply overflow-y-auto;
@@ -43,7 +43,7 @@
 }
 
 .buttonWrapper {
-  @apply absolute top-0 left-0 right-0 -translate-y-3/4 flex z-20 items-center justify-center;
+  @apply absolute top-0 left-0 right-0 -translate-y-3/4 flex z-20 items-center justify-center gap-2;
 
   .addButton {
     @apply transition-all lg:opacity-0 lg:invisible;

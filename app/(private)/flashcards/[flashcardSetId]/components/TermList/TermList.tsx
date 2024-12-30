@@ -19,8 +19,11 @@ import TermListItem from './TermListItem/TermListItem';
 import SaveBtn from '@/app/(private)/flashcards/components/SaveBtn/SaveBtn';
 import BackBtn from '@/app/(private)/flashcards/components/BackBtn/BackBtn';
 import {
+  flashcardApiSlice,
   useAddFlashcardsMutation,
   useGetFlashcardQuery,
+  useRemoveFlashcardsMutation,
+  useUpdateFlashcardsMutation,
 } from '@/features/flashcard/flashcardApiSlice';
 import { FlashcardSet } from '@/features/flashcardSet/types';
 import { HEIGHT_ACTION_ON_SCROLL } from '@/configs/site.config';
@@ -50,6 +53,9 @@ const TermList = forwardRef<TermListRefMethods, TermListProps>(
     const { data } = useGetFlashcardQuery(flashcardSetId);
     const [addFlashcards] = useAddFlashcardsMutation();
     const [createFlashcards] = useCreateFlashcardsMutation();
+    const [removeFlashcards] = useRemoveFlashcardsMutation();
+    const [removeFlashcardIds, setRemoveFlashcardIds] = useState<string[]>([]);
+    const [updateFlashcards] = useUpdateFlashcardsMutation();
     // ------------------ STATE ------------------
     // Lấy dữ liệu ban đầu
     const initialData = useMemo(
@@ -68,6 +74,7 @@ const TermList = forwardRef<TermListRefMethods, TermListProps>(
         setLocalData(prev =>
           produce(prev, draft => {
             draft[index][key] = value;
+            draft[index].isEdit = true;
           }),
         );
       }, 500);
@@ -75,7 +82,7 @@ const TermList = forwardRef<TermListRefMethods, TermListProps>(
 
     // Thêm / xóa flashcard
     const handleActionFlashcard = useCallback(
-      (action: 'add' | 'delete', order: number) => {
+      (action: 'add' | 'delete' | 'edit', order: number) => {
         setLocalData(prev =>
           produce(prev, draft => {
             if (action === 'add') {
@@ -88,14 +95,31 @@ const TermList = forwardRef<TermListRefMethods, TermListProps>(
                 created_at: new Date().toISOString(),
                 updated_at: new Date().toISOString(),
               };
-              if (order === -1) {
-                draft.push(newElement);
-              } else {
-                draft.splice(order, 0, newElement);
+              // Chèn phần tử mới và chỉ cập nhật order của các mục sau đó
+              draft.splice(order, 0, newElement);
+              for (let i = order + 1; i <= draft.length; i++) {
+                draft[i - 1].order = i;
               }
             } else if (action === 'delete') {
-              draft.splice(order, 1);
+              if (!draft[order]) return; // Ensure the order exists in draft
+              const flashcardId = draft[order].id; // Store the ID before splicing
+              if (draft[order].isNew) {
+                draft.splice(order, 1); // Chỉ xóa mục đó
+              } else {
+                setRemoveFlashcardIds(prev => {
+                  if (!prev.includes(flashcardId)) {
+                    return [...prev, flashcardId];
+                  }
+                  return prev; // không thêm nữa
+                });
+                draft.splice(order, 1); // Xóa mục sau khi lưu ID
+              }
+              // Giảm order của các mục sau đó
+              for (let i = order; i < draft.length; i++) {
+                draft[i].order = i + 1;
+              }
             }
+            console.log('draft', Array.from(draft));
           }),
         );
       },
@@ -105,17 +129,35 @@ const TermList = forwardRef<TermListRefMethods, TermListProps>(
     const handleSubmitData = useCallback(async () => {
       if (isValidMetadata && isValidMetadata()) {
         const newData = localData.filter(flashcard => flashcard.isNew);
+        const editData = localData.filter(
+          flashcard => flashcard.isEdit && !flashcard.isNew,
+        );
         try {
-          if (type === 'edit') {
-            await addFlashcards({
+          if (removeFlashcardIds.length) {
+            await removeFlashcards({
               id: flashcardSetId,
-              body: { ...metadata, flashcards: newData },
+              body: { ids: removeFlashcardIds },
             });
+          }
+          if (type === 'edit') {
+            if (editData.length) {
+              await updateFlashcards({
+                id: flashcardSetId,
+                body: { ...metadata, flashcards: editData },
+              });
+            }
+            if (newData.length) {
+              await addFlashcards({
+                id: flashcardSetId,
+                body: { ...metadata, flashcards: newData },
+              });
+            }
           }
           if (type === 'add') {
             await createFlashcards({ ...metadata, flashcards: newData });
           }
 
+          flashcardApiSlice.util.invalidateTags(['Flashcards']);
           toast.success('Flashcards saved successfully');
         } catch (error) {
           console.error('Failed to add flashcards:', error);
@@ -134,6 +176,15 @@ const TermList = forwardRef<TermListRefMethods, TermListProps>(
       debouncedHandleChangeFlashcard.flush();
       // Kích hoạt submit
       setIsSubmitting(true);
+    }, [debouncedHandleChangeFlashcard]);
+
+    const handleSaveLocalData = useCallback(() => {
+      // Nếu đang focus -> blur
+      if (document.activeElement instanceof HTMLElement) {
+        document.activeElement.blur();
+      }
+      // Flush thay đổi debounce
+      debouncedHandleChangeFlashcard.flush();
     }, [debouncedHandleChangeFlashcard]);
 
     // ------------------ EXPOSE METHODS ------------------
@@ -211,7 +262,7 @@ const TermList = forwardRef<TermListRefMethods, TermListProps>(
                 debouncedHandleChangeFlashcard(i, k, v);
               }}
               handleActionFlashcard={handleActionFlashcard}
-              handleSubmitData={() => {}}
+              handleSaveLocalData={handleSaveLocalData}
             />
           ))}
         </div>

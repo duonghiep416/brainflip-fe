@@ -10,6 +10,7 @@ import SaveBtn from '@/app/(private)/flashcards/components/SaveBtn/SaveBtn';
 import TermList, {
   TermListRefMethods,
 } from '@/app/(private)/flashcards/[flashcardSetId]/components/TermList/TermList';
+import { autoScroll } from '@/utils/autoscroll';
 
 const AddUpdateFlashcardSetForm = () => {
   // ------------------ HOOKS/VARs ------------------
@@ -42,6 +43,7 @@ const AddUpdateFlashcardSetForm = () => {
 
   const isValidMetadata = (value?: string): boolean => {
     if (value !== undefined && !value) {
+      autoScroll(0);
       setError('Title is required');
       return false;
     } else if (value) {
@@ -50,6 +52,7 @@ const AddUpdateFlashcardSetForm = () => {
     }
     setError('');
     if (!metadata.title.trim()) {
+      autoScroll(0);
       setError('Title is required');
       return false;
     }
@@ -60,8 +63,8 @@ const AddUpdateFlashcardSetForm = () => {
   useEffect(() => {
     if (data) {
       setMetadata({
-        title: data.title,
-        description: data.description,
+        title: data.title || '',
+        description: data.description || '',
       });
     }
   }, [data]);
@@ -100,7 +103,6 @@ const AddUpdateFlashcardSetForm = () => {
           setMetadata(prev => ({ ...prev, description: e.target.value }))
         }
       />
-
       <TermList
         ref={termListRef}
         type={type}

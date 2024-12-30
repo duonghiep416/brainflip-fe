@@ -11,13 +11,14 @@ import clsx from 'clsx';
 import ProgressStatusItem from '@/components/ProgressStatusItem/ProgressStatusItem';
 import { TermListProps } from '@/app/(private)/flashcards/[flashcardSetId]/components/TermList/TermList';
 import { IoAdd } from 'react-icons/io5';
+import { TbDragDrop } from 'react-icons/tb';
 
 interface TermListItemI extends TermListProps {
   flashcard: Flashcard;
   order: number;
   handleActionFlashcard: (action: 'add' | 'delete', order: number) => void;
   handleChangeFlashcard: (index: number, key: string, value: any) => void;
-  handleSubmitData: () => void;
+  handleSaveLocalData: () => void;
 }
 
 const TermListItem = ({
@@ -26,6 +27,7 @@ const TermListItem = ({
   type = 'view',
   handleActionFlashcard,
   handleChangeFlashcard,
+  handleSaveLocalData,
 }: TermListItemI) => {
   const [isExpanded, setIsExpanded] = useState(false);
   const [hasOverflow, setHasOverflow] = useState(false);
@@ -85,7 +87,10 @@ const TermListItem = ({
                 variant="bordered"
                 size="sm"
                 color="danger"
-                onPress={() => handleActionFlashcard('delete', order - 1)}
+                onPress={() => {
+                  handleSaveLocalData();
+                  handleActionFlashcard('delete', order - 1);
+                }}
               >
                 <RiDeleteBin5Line size={18} />
               </Button>
@@ -148,9 +153,21 @@ const TermListItem = ({
             variant="bordered"
             size="sm"
             className={clsx(styles.addButton)}
-            onPress={() => handleActionFlashcard('add', order - 1)}
+            onPress={() => {
+              handleSaveLocalData();
+              handleActionFlashcard('add', order - 1);
+            }}
           >
             <IoAdd />
+          </Button>
+          <Button
+            isIconOnly
+            radius="full"
+            variant="bordered"
+            size="sm"
+            className={clsx(styles.addButton, 'cursor-move')}
+          >
+            <TbDragDrop size={16} />
           </Button>
         </div>
       )}
