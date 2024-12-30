@@ -1,8 +1,11 @@
 import type { Metadata } from 'next';
 import './globals.css';
+import '@/styles/utilities.css';
 import Providers from '@/components/Providers/Providers';
 import '@/styles/fonts.css';
 import { Toaster } from 'sonner';
+import styles from './layout.module.scss';
+import clsx from 'clsx';
 
 export const metadata: Metadata = {
   title: 'Brain Flip',
@@ -17,9 +20,10 @@ export default function RootLayout({
   return (
     <html lang="en" className="light" data-theme="light">
       <body>
+        <div id="header-portal" className={clsx(styles.headerPortal)}></div>
         <div
-          id="header-portal"
-          className="fixed top-0 left-0 right-0 h-14 lg:h-16 z-50"
+          id="header-secondary-portal"
+          className={clsx(styles.headerSecondary)}
         ></div>
         <Toaster richColors position="top-center" />
         <Providers>{children}</Providers>

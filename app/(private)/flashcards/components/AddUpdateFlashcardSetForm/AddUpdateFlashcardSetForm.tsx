@@ -1,47 +1,115 @@
 'use client';
-import Form from '@/components/Form/Form';
-import Input from '@/components/Input/Input';
-import { useForm } from 'react-hook-form';
 import styles from './AddUpdateFlashcardSetForm.module.scss';
-import clsx from 'clsx';
-import FlashcardUpdateItem from '@/app/(private)/flashcards/components/FlashcardUpdateItem/FlashcardUpdateItem';
-import TermList from '@/app/(private)/flashcards/[flashcardSetId]/components/TermList/TermList';
-import { usePathname } from 'next/navigation';
+
+import React, { useEffect, useState, useRef } from 'react';
+import { useParams, usePathname } from 'next/navigation';
+import { useGetFlashcardSetQuery } from '@/features/flashcardSet/flashcardSetApiSlice';
+import { FlashcardSet } from '@/features/flashcardSet/types';
+import { Input, Textarea } from '@nextui-org/react';
+import SaveBtn from '@/app/(private)/flashcards/components/SaveBtn/SaveBtn';
+import TermList, {
+  TermListRefMethods,
+} from '@/app/(private)/flashcards/[flashcardSetId]/components/TermList/TermList';
+import { autoScroll } from '@/utils/autoscroll';
+
 const AddUpdateFlashcardSetForm = () => {
-  const formMethods = useForm<Record<string, any>>();
+  // ------------------ HOOKS/VARs ------------------
+  const { flashcardSetId } = useParams();
   const pathname = usePathname();
+  const { data } = useGetFlashcardSetQuery({
+    flashcardSetId: flashcardSetId as string,
+  }) as { data: FlashcardSet | undefined };
+
+  // ------------------ STATE ------------------
+  const [metadata, setMetadata] = useState({
+    title: '',
+    description: '',
+  });
+  const [error, setError] = useState('');
+
+  // Dùng ref để gọi hàm từ TermList
+  const termListRef = useRef<TermListRefMethods>(null);
+
+  // ------------------ DERIVED ------------------
+  const isNew = pathname.includes('new');
+  const isEdit = pathname.includes('edit');
+  const type = isNew ? 'add' : isEdit ? 'edit' : 'view';
+
+  // ------------------ HANDLERS ------------------
+  // Khi nhấn SaveBtn bên form này => gọi TermList.saveData()
+  const handleSaveData = () => {
+    termListRef.current?.saveData();
+  };
+
+  const isValidMetadata = (value?: string): boolean => {
+    if (value !== undefined && !value) {
+      autoScroll(0);
+      setError('Title is required');
+      return false;
+    } else if (value) {
+      setError('');
+      return true;
+    }
+    setError('');
+    if (!metadata.title.trim()) {
+      autoScroll(0);
+      setError('Title is required');
+      return false;
+    }
+    return true;
+  };
+
+  // ------------------ EFFECTS ------------------
+  useEffect(() => {
+    if (data) {
+      setMetadata({
+        title: data.title || '',
+        description: data.description || '',
+      });
+    }
+  }, [data]);
+
+  // ------------------ RENDER ------------------
   return (
     <>
-      <Form
-        formMethods={formMethods}
-        onSubmit={(data: Record<string, any>) => console.log(data)}
-      >
-        <div className={clsx(styles.inputContainer, 'dark:bg-neutral-dark-md')}>
-          <Input
-            label="Title"
-            name="title"
-            labelStyles={clsx(styles.label)}
-            className="dark:bg-main-dark"
-          />
-        </div>
-        <div className={clsx(styles.inputContainer, 'dark:bg-neutral-dark-md')}>
-          <Input
-            label="Description"
-            name="description"
-            labelStyles={clsx(styles.label)}
-            className="dark:bg-main-dark"
-          />
-        </div>
-        <TermList
-          type={
-            pathname.includes('new')
-              ? 'add'
-              : pathname.includes('edit')
-              ? 'edit'
-              : 'view'
-          }
-        />
-      </Form>
+      {/* Chỉ hiển thị nút SaveBtn khi type !== 'view' */}
+      <div className="mb-5 flex justify-end">
+        {type !== 'view' && <SaveBtn handleSaveData={handleSaveData} />}
+      </div>
+
+      <Input
+        label="Title"
+        name="title"
+        classNames={{
+          label: styles.label,
+        }}
+        value={metadata.title}
+        onChange={e => {
+          setMetadata(prev => ({ ...prev, title: e.target.value }));
+          isValidMetadata(e.target.value);
+        }}
+        errorMessage={error}
+        isInvalid={Boolean(error)}
+        className="mb-4"
+      />
+      <Textarea
+        label="Description"
+        name="description"
+        classNames={{
+          label: styles.label,
+        }}
+        value={metadata.description}
+        onChange={e =>
+          setMetadata(prev => ({ ...prev, description: e.target.value }))
+        }
+      />
+      <TermList
+        ref={termListRef}
+        type={type}
+        setInfo={data as FlashcardSet}
+        isValidMetadata={isValidMetadata}
+        metadata={metadata}
+      />
     </>
   );
 };

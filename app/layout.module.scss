@@ -1,0 +1,7 @@
+.headerPortal {
+  @apply fixed top-0 left-0 right-0 h-14 lg:h-16 z-40;
+}
+
+.headerSecondary {
+  @apply fixed top-0 left-0 right-0 h-14 lg:h-16 z-50 opacity-0 invisible transition-all;
+}

@@ -5,21 +5,16 @@ import { endpoints } from '@/configs/endpoints';
 import { SERVER_URL } from '@/configs/site.config';
 import Link from 'next/link';
 import { Button } from '@nextui-org/react';
-import { FcHome } from 'react-icons/fc';
 import styles from './page.module.scss';
 import TermList from '@/app/(private)/flashcards/[flashcardSetId]/components/TermList/TermList';
+import { FlashcardSet } from '@/features/flashcardSet/types';
 
 interface FlashcardsPageProps {
   params: { flashcardSetId: string };
 }
-
-interface ProjectData {
-  id: string;
-  title: string;
-  description: string;
-}
-
-async function fetchFlashcardSet(flashcardSetId: string): Promise<ProjectData> {
+async function fetchFlashcardSet(
+  flashcardSetId: string,
+): Promise<FlashcardSet> {
   const cookieStore = cookies();
   const token = cookieStore.get('auth-token')?.value;
 
@@ -77,7 +72,7 @@ export default async function FlashcardPage({ params }: FlashcardsPageProps) {
     <div>
       <h1 className={styles.title}>{flashcard.title}</h1>
       <h2 className={styles.description}>{flashcard.description}</h2>
-      <TermList type="view" />
+      <TermList type="view" setInfo={flashcard} />
       <div className="flex justify-center">
         <Button
           as={Link}
