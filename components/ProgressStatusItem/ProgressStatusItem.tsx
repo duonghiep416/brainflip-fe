@@ -64,6 +64,7 @@ const ProgressStatusItem = ({
           indicator: clsx(colorClasses[level]),
         }}
         strokeWidth={5}
+        aria-label="Progress status"
       />
       <div className={clsx(colorClasses[level])}>{variants[level].text}</div>
     </div>

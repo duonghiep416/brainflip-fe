@@ -19,7 +19,6 @@ import TermListItem from './TermListItem/TermListItem';
 import SaveBtn from '@/app/(private)/flashcards/components/SaveBtn/SaveBtn';
 import BackBtn from '@/app/(private)/flashcards/components/BackBtn/BackBtn';
 import {
-  flashcardApiSlice,
   useAddFlashcardsMutation,
   useGetFlashcardQuery,
   useRemoveFlashcardsMutation,
@@ -133,31 +132,43 @@ const TermList = forwardRef<TermListRefMethods, TermListProps>(
           flashcard => flashcard.isEdit && !flashcard.isNew,
         );
         try {
-          if (removeFlashcardIds.length) {
-            await removeFlashcards({
-              id: flashcardSetId,
-              body: { ids: removeFlashcardIds },
-            });
-          }
+          // Sửa flashcard set có sẵn
           if (type === 'edit') {
+            await addFlashcards({
+              id: flashcardSetId,
+              body: { ...metadata, flashcards: newData },
+            });
             if (editData.length) {
               await updateFlashcards({
                 id: flashcardSetId,
                 body: { ...metadata, flashcards: editData },
               });
             }
-            if (newData.length) {
-              await addFlashcards({
+            if (removeFlashcardIds.length) {
+              await removeFlashcards({
                 id: flashcardSetId,
-                body: { ...metadata, flashcards: newData },
+                body: { ids: removeFlashcardIds },
               });
             }
           }
+
+          // Tạo flashcard set mới
           if (type === 'add') {
             await createFlashcards({ ...metadata, flashcards: newData });
           }
 
-          flashcardApiSlice.util.invalidateTags(['Flashcards']);
+          // Change new, edit, delete to false
+          setLocalData(prev =>
+            produce(prev, draft => {
+              draft.forEach(flashcard => {
+                if (flashcard.isNew || flashcard.isEdit) {
+                  flashcard.isNew = false;
+                  flashcard.isEdit = false;
+                }
+              });
+            }),
+          );
+
           toast.success('Flashcards saved successfully');
         } catch (error) {
           console.error('Failed to add flashcards:', error);

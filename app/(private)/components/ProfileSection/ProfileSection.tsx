@@ -22,6 +22,7 @@ export const ProfileSection = () => {
           styles.profileSection,
           'dark:bg-neutral-dark-md grow basis-0',
         )}
+        aria-label="Profile section"
       >
         <div className={clsx(styles.coverImgContainer)}>
           <div className={clsx(styles.avatarContainer)}>
