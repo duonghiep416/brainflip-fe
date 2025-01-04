@@ -59,6 +59,7 @@ const TermListItem = ({
           { [styles.collapsed]: !isExpanded },
           'dark:bg-neutral-dark-md',
         )}
+        aria-label="flashcard"
       >
         <CardHeader className="px-3 py-0 flex items-center justify-between">
           <span className={styles.order}>{order}</span>

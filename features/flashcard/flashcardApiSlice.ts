@@ -52,6 +52,7 @@ export const flashcardApiSlice = createApi({
         method: 'PATCH',
         body,
       }),
+      invalidatesTags: ['Flashcards'],
     }),
   }),
 });

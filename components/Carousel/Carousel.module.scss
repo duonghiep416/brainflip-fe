@@ -1,0 +1,74 @@
+.carousel {
+  @apply max-w-4xl mx-auto my-10;
+  --slide-height: 23rem;
+  --slide-spacing: 1rem;
+  --slide-size: 100%;
+
+  .carousel__viewport {
+    @apply overflow-hidden w-full;
+    height: var(--slide-height); // Fixes viewport height issue
+  }
+
+  .carousel__container {
+    @apply flex touch-pan-y;
+    height: 100%; // Ensures container inherits viewport height
+    margin-left: calc(var(--slide-spacing) * -1);
+  }
+
+  .carousel__slide {
+    @apply flex-none w-full;
+    flex: 0 0 var(--slide-size);
+    height: var(--slide-height); // Explicit height for slides
+    padding-left: var(--slide-spacing);
+  }
+
+  .carousel__slideContent {
+    @apply relative w-full h-full;
+    perspective: 1000px; // Enables 3D space
+    transform-style: preserve-3d;
+    transition: transform 0.4s ease-in-out; // Smooth flip animation
+    cursor: pointer;
+
+    &.carousel__flipped {
+      transform: rotateX(180deg); // Flip to back
+    }
+  }
+
+  .carousel__front,
+  .carousel__back {
+    @apply absolute w-full h-full flex items-center justify-center border shadow-inner text-center select-none;
+    backface-visibility: hidden; // Hides the opposite side
+    border-radius: 1rem;
+    overflow: hidden;
+  }
+
+  .carousel__front {
+    @apply text-3xl sm:text-4xl md:text-5xl lg:text-6xl;
+    transform: rotateX(0deg); // Front visible
+  }
+
+  .carousel__back {
+    @apply text-xl sm:text-2xl md:text-3xl lg:text-4xl;
+    transform: rotateX(180deg); // Back hidden
+  }
+
+  .carousel__controls {
+    @apply flex items-center justify-between mt-4;
+  }
+
+  .carousel__buttons {
+    @apply flex items-center space-x-2;
+  }
+
+  .carousel__play {
+    @apply flex items-center justify-center w-10 h-10;
+  }
+
+  .carousel__disabled {
+    @apply opacity-50 cursor-not-allowed;
+  }
+
+  .carousel__noCards {
+    @apply cursor-default;
+  }
+}

@@ -8,6 +8,7 @@ import { Button } from '@nextui-org/react';
 import styles from './page.module.scss';
 import TermList from '@/app/(private)/flashcards/[flashcardSetId]/components/TermList/TermList';
 import { FlashcardSet } from '@/features/flashcardSet/types';
+import Carousel from '@/components/Carousel/Carousel';
 
 interface FlashcardsPageProps {
   params: { flashcardSetId: string };
@@ -72,6 +73,7 @@ export default async function FlashcardPage({ params }: FlashcardsPageProps) {
     <div>
       <h1 className={styles.title}>{flashcard.title}</h1>
       <h2 className={styles.description}>{flashcard.description}</h2>
+      <Carousel />
       <TermList type="view" setInfo={flashcard} />
       <div className="flex justify-center">
         <Button

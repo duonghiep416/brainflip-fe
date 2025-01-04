@@ -7,8 +7,12 @@ import Link from 'next/link';
 
 export const StudyCard = ({ flashcardSet }: { flashcardSet: FlashcardSet }) => {
   return (
-    <Link href={`/flashcards/${flashcardSet.id}`} className="w-full">
-      <Card className="w-full shadow-md" shadow="none">
+    <Link
+      href={`/flashcards/${flashcardSet.id}`}
+      className="w-full"
+      aria-label="Click to detail study card page"
+    >
+      <Card className="w-full shadow-md" shadow="none" aria-label="Study card">
         <CardBody className={clsx(styles.studyCardBody)}>
           <div className={clsx(styles.flexCs)}>
             <FlashcardIcon />
