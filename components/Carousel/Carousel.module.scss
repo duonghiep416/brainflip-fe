@@ -72,3 +72,12 @@
     @apply cursor-default;
   }
 }
+.carousel__progress {
+  @apply rounded-3xl relative h-2.5 self-center w-40 lg:w-48 max-w-[90%] overflow-hidden border;
+
+  background-color: transparent;
+}
+
+.carousel__progress__bar {
+  @apply absolute w-full top-0 bottom-0 -left-full bg-neutral-600;
+}

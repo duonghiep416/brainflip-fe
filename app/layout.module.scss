@@ -5,3 +5,7 @@
 .headerSecondary {
   @apply fixed top-0 left-0 right-0 h-14 lg:h-16 z-50 opacity-0 invisible transition-all;
 }
+
+.scrollToTop {
+  @apply fixed bottom-4 right-4 z-40;
+}
