@@ -12,6 +12,8 @@ import ProgressStatusItem from '@/components/ProgressStatusItem/ProgressStatusIt
 import { TermListProps } from '@/app/(private)/flashcards/[flashcardSetId]/components/TermList/TermList';
 import { IoAdd } from 'react-icons/io5';
 import { TbDragDrop } from 'react-icons/tb';
+import TextToSpeechBtn from '@/components/TextToSpeechBtn/TextToSpeechBtn';
+import EditFlashcard from '@/app/(private)/flashcards/[flashcardSetId]/components/EditFlashcard/EditFlashcard';
 
 interface TermListItemI extends TermListProps {
   flashcard: Flashcard;
@@ -80,7 +82,18 @@ const TermListItem = ({
                 )}
               </Button>
             )}
-            {type === 'view' && <ProgressStatusItem />}
+            {type === 'view' && (
+              <>
+                <ProgressStatusItem />
+                <TextToSpeechBtn sentence={flashcard.term} />
+                <EditFlashcard
+                  flashcardId={flashcard.id}
+                  defaultTerm={flashcard.term}
+                  defaultDefinition={flashcard.definition}
+                />
+              </>
+            )}
+
             {type !== 'view' && (
               <Button
                 isIconOnly

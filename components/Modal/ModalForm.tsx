@@ -1,4 +1,5 @@
 'use client';
+
 import {
   Button,
   ModalBody,
@@ -39,11 +40,11 @@ export const ModalForm: React.FC<ModalFormProps> = ({
 
   return (
     <>
-      {nodeTrigger && (
-        <div onClick={onOpen} className="cursor-pointer underline">
-          {nodeTrigger}
-        </div>
-      )}
+      {nodeTrigger &&
+        React.isValidElement(nodeTrigger) &&
+        React.cloneElement(nodeTrigger as React.ReactElement, {
+          onPress: onOpen,
+        })}
       <ModalNextUI
         isOpen={isOpen || !nodeTrigger}
         onOpenChange={onOpenChange}

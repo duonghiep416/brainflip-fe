@@ -6,6 +6,7 @@ import '@/styles/fonts.css';
 import { Toaster } from 'sonner';
 import styles from './layout.module.scss';
 import clsx from 'clsx';
+import ScrollToTop from '@/components/ScrollToTop/ScrollToTop';
 
 export const metadata: Metadata = {
   title: 'Brain Flip',
@@ -26,6 +27,11 @@ export default function RootLayout({
           className={clsx(styles.headerSecondary)}
         ></div>
         <Toaster richColors position="top-center" />
+        <div
+          id="scroll-to-top-portal"
+          className={clsx(styles.scrollToTop)}
+        ></div>
+        <ScrollToTop />
         <Providers>{children}</Providers>
       </body>
     </html>

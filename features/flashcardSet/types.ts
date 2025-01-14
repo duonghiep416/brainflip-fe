@@ -5,6 +5,7 @@ export interface FlashcardSet {
   created_at: string;
   updated_at: string;
   user_id: string;
+  total: number;
 }
 
 export interface GetFlashcardSetResponseMetadata {
