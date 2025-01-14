@@ -67,12 +67,12 @@ const CarouselControls = ({ emblaApi }: { emblaApi: any }) => {
     <div className={clsx(styles.carousel__controls)}>
       <div className={clsx(styles.carousel__buttons)}>
         <PrevButton
-          onClick={() => emblaApi?.scrollPrev()}
+          onPress={() => emblaApi?.scrollPrev()}
           disabled={prevBtnDisabled}
           className={prevBtnDisabled ? styles.carousel__disabled : ''}
         />
         <NextButton
-          onClick={() => emblaApi?.scrollNext()}
+          onPress={() => emblaApi?.scrollNext()}
           disabled={nextBtnDisabled}
           className={nextBtnDisabled ? styles.carousel__disabled : ''}
         />
@@ -86,7 +86,7 @@ const CarouselControls = ({ emblaApi }: { emblaApi: any }) => {
         </div>
         <Button
           className={clsx(styles.carousel__play)}
-          onClick={toggleAutoplay}
+          onPress={toggleAutoplay}
           type="button"
           variant="bordered"
           radius="full"

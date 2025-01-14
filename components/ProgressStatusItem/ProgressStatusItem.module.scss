@@ -17,3 +17,9 @@
 .mastered {
   @apply bg-green-300/20;
 }
+
+@media (max-width: 640px) {
+  .progressStatusItemContainer {
+    @apply min-w-28 max-w-36;
+  }
+}

@@ -28,6 +28,7 @@ import { FlashcardSet } from '@/features/flashcardSet/types';
 import { HEIGHT_ACTION_ON_SCROLL } from '@/configs/site.config';
 import { toast } from 'sonner';
 import { useCreateFlashcardsMutation } from '@/features/flashcardSet/flashcardSetApiSlice';
+import AddEditBtn from '@/app/(private)/flashcards/[flashcardSetId]/components/AddEditBtn/AddEditBtn';
 
 // ------------------ INTERFACE ------------------
 export interface TermListProps {
@@ -118,7 +119,6 @@ const TermList = forwardRef<TermListRefMethods, TermListProps>(
                 draft[i].order = i + 1;
               }
             }
-            console.log('draft', Array.from(draft));
           }),
         );
       },
@@ -228,15 +228,29 @@ const TermList = forwardRef<TermListRefMethods, TermListProps>(
     // Xử lý scroll
     useEffect(() => {
       const headerElement = document.getElementById('header-secondary-portal');
+      let lastScrollY = window.scrollY;
+
       const handleScroll = () => {
         if (headerElement) {
-          if (window.scrollY > HEIGHT_ACTION_ON_SCROLL) {
-            headerElement.classList.add('show');
+          const currentScrollY = window.scrollY;
+
+          if (currentScrollY > HEIGHT_ACTION_ON_SCROLL) {
+            // Scrolling down
+            if (currentScrollY < lastScrollY) {
+              headerElement.classList.remove('show');
+            }
+            // Scrolling up
+            else if (currentScrollY > lastScrollY) {
+              headerElement.classList.add('show');
+            }
           } else {
             headerElement.classList.remove('show');
           }
+
+          lastScrollY = currentScrollY;
         }
       };
+
       document.addEventListener('scroll', handleScroll);
       return () => {
         document.removeEventListener('scroll', handleScroll);
@@ -246,21 +260,25 @@ const TermList = forwardRef<TermListRefMethods, TermListProps>(
     // ------------------ RENDER ------------------
     return (
       <>
-        <SecondaryHeader
-          startContent={
-            <div className="flex-center-vertical">
-              <BackBtn />
-              {setInfo && (
+        {setInfo && (
+          <SecondaryHeader
+            startContent={
+              <div className="flex-center-vertical">
+                <BackBtn />
                 <h1 className="text-xl font-bold text-center mx-5">
                   {setInfo.title}
                 </h1>
-              )}
-            </div>
-          }
-          endContent={
-            type !== 'view' && <SaveBtn handleSaveData={handleSaveData} />
-          }
-        />
+              </div>
+            }
+            endContent={
+              type !== 'view' ? (
+                <SaveBtn handleSaveData={handleSaveData} />
+              ) : (
+                <AddEditBtn id={setInfo.id}>Edit</AddEditBtn>
+              )
+            }
+          />
+        )}
 
         <div className="flex flex-col gap-4 mt-20">
           {localData.map((flashcard, index) => (

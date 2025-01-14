@@ -9,6 +9,7 @@ import styles from './page.module.scss';
 import TermList from '@/app/(private)/flashcards/[flashcardSetId]/components/TermList/TermList';
 import { FlashcardSet } from '@/features/flashcardSet/types';
 import Carousel from '@/components/Carousel/Carousel';
+import AddEditBtn from '@/app/(private)/flashcards/[flashcardSetId]/components/AddEditBtn/AddEditBtn';
 
 interface FlashcardsPageProps {
   params: { flashcardSetId: string };
@@ -69,23 +70,17 @@ export async function generateMetadata(
 
 export default async function FlashcardPage({ params }: FlashcardsPageProps) {
   const flashcard = await fetchFlashcardSet(params.flashcardSetId);
+
   return (
     <div>
       <h1 className={styles.title}>{flashcard.title}</h1>
-      <h2 className={styles.description}>{flashcard.description}</h2>
+      <h2 className={styles.description}>
+        {flashcard.description} | {flashcard.total} flashcards
+      </h2>
       <Carousel />
       <TermList type="view" setInfo={flashcard} />
       <div className="flex justify-center">
-        <Button
-          as={Link}
-          href={`/flashcards/${flashcard.id}/edit`}
-          radius="full"
-          color="primary"
-          className="font-bold my-10 justify-center"
-          size="md"
-        >
-          Add or Edit Terms
-        </Button>
+        <AddEditBtn id={flashcard.id} />
       </div>
     </div>
   );

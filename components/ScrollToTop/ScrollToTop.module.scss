@@ -12,10 +12,9 @@
   justify-content: center;
   transition: background-color 0.3s ease, box-shadow 0.3s ease;
   z-index: 10;
-
+  box-shadow: 0 0 12px rgba(0, 0, 0, 0.4);
   &:hover {
     background-color: #092522; // Neutral black on hover
-    box-shadow: 0 0 12px rgba(0, 0, 0, 0.4);
   }
 
   // Add the dynamic circular border
