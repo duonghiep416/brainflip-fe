@@ -9,64 +9,129 @@ import {
   Modal as ModalNextUI,
   useDisclosure,
 } from '@nextui-org/react';
-
 import React from 'react';
+import { IoPencil } from 'react-icons/io5';
 
 interface ModalFormProps {
   nodeTrigger?: React.ReactNode;
+  icon?: React.ReactNode;
   header?: React.ReactNode;
   children: React.ReactNode;
   isCloseBtn?: boolean;
-  onSubmit?: () => void;
+  onSubmit?: () => void | Promise<void>;
   actionButtonText?: string;
+  headerStyle?: React.CSSProperties;
+  bodyStyle?: React.CSSProperties;
+  footerStyle?: React.CSSProperties;
+  isActionDisabled?: boolean;
+  cleanupFunction?: () => void;
   [key: string]: any;
 }
 
 export const ModalForm: React.FC<ModalFormProps> = ({
   nodeTrigger,
+  icon,
   header,
   children,
-  isCloseBtn,
+  isCloseBtn = true,
   onSubmit,
-  actionButtonText,
+  actionButtonText = 'Submit',
+  headerStyle,
+  bodyStyle,
+  footerStyle,
+  isActionDisabled,
+  cleanupFunction,
   ...props
 }) => {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
 
-  const handleAction = (onClose: () => void) => {
-    onSubmit && onSubmit();
+  const handleAction = async (onClose: () => void) => {
+    if (onSubmit) {
+      try {
+        await onSubmit();
+      } catch (error) {
+        console.error('Error in onSubmit:', error);
+      }
+    }
     onClose();
   };
 
+  React.useEffect(() => {
+    const modalWrapper = document.querySelector('.custom-modal-wrapper');
+    const handleClick = (e: Event) => {
+      e.stopPropagation();
+    };
+
+    if (modalWrapper) {
+      modalWrapper.addEventListener('click', handleClick);
+    }
+
+    return () => {
+      if (modalWrapper) {
+        modalWrapper.removeEventListener('click', handleClick);
+      }
+    };
+  }, [isOpen]);
+
   return (
     <>
+      {icon && (
+        <Button
+          isIconOnly
+          variant="bordered"
+          radius="full"
+          size="sm"
+          aria-label="Edit flashcard"
+          onPress={onOpen}
+        >
+          {icon}
+        </Button>
+      )}
       {nodeTrigger &&
         React.isValidElement(nodeTrigger) &&
         React.cloneElement(nodeTrigger as React.ReactElement, {
           onPress: onOpen,
         })}
       <ModalNextUI
-        isOpen={isOpen || !nodeTrigger}
-        onOpenChange={onOpenChange}
+        isOpen={isOpen}
+        onOpenChange={(open: boolean) => {
+          if (!open && cleanupFunction) {
+            cleanupFunction();
+          }
+          onOpenChange();
+        }}
+        onClick={e => {
+          e.stopPropagation();
+        }}
+        classNames={{
+          wrapper: 'custom-modal-wrapper',
+        }}
         {...props}
       >
         <ModalContent>
           {onClose => (
             <>
-              {header && <ModalHeader>{header}</ModalHeader>}
-              {children && <ModalBody>{children}</ModalBody>}
-              <ModalFooter>
-                {isCloseBtn && (
-                  <Button color="danger" variant="light" onPress={onClose}>
-                    Close
-                  </Button>
-                )}
-                {actionButtonText && (
-                  <Button color="primary" onPress={() => handleAction(onClose)}>
-                    {actionButtonText}
-                  </Button>
-                )}
-              </ModalFooter>
+              {header && (
+                <ModalHeader style={headerStyle}>{header}</ModalHeader>
+              )}
+              <ModalBody style={bodyStyle}>{children}</ModalBody>
+              {!isActionDisabled && (
+                <ModalFooter style={footerStyle}>
+                  {isCloseBtn && (
+                    <Button color="danger" variant="light" onPress={onClose}>
+                      Close
+                    </Button>
+                  )}
+                  {actionButtonText && (
+                    <Button
+                      color="primary"
+                      onPress={() => handleAction(onClose)}
+                    >
+                      {actionButtonText}
+                    </Button>
+                  )}
+                </ModalFooter>
+              )}
             </>
           )}
         </ModalContent>

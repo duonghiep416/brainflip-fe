@@ -1,4 +1,4 @@
-import React, { FormEvent } from 'react';
+import React, { FormEvent, useEffect } from 'react';
 import { ModalForm } from '@/components/Modal/ModalForm';
 import { Button, Input, Textarea } from '@nextui-org/react';
 import { IoPencil } from 'react-icons/io5';
@@ -76,18 +76,14 @@ const EditFlashcard: React.FC<EditFlashcardProps> = ({
   return (
     <div>
       <ModalForm
-        nodeTrigger={
-          <Button
-            isIconOnly
-            variant="bordered"
-            radius="full"
-            size="sm"
-            aria-label="Edit flashcard"
-          >
-            <IoPencil />
-          </Button>
-        }
+        icon={<IoPencil />}
         header={`Edit Flashcard`}
+        isActionDisabled
+        cleanupFunction={() => {
+          setTerm(defaultTerm);
+          setDefinition(defaultDefinition);
+          setErrors({ term: '', definition: '' });
+        }}
       >
         <form
           onSubmit={e => {

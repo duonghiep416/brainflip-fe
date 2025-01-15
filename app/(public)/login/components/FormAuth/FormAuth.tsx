@@ -16,7 +16,7 @@ import {
 import { parseDuration } from '@/utils/dateTime';
 import { emailRegex, passwordRegex } from '@/utils/regex';
 import { getLocalTimeZone, today } from '@internationalized/date';
-import { Button, DatePicker } from '@nextui-org/react';
+import { Button, DatePicker, Link } from '@nextui-org/react';
 import { useRouter } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
@@ -210,7 +210,17 @@ export const FormAuth = ({
         <div className="text-right mt-2 text-sm flex justify-end">
           Forgot password?{' '}
           <ModalForm
-            nodeTrigger="Reset it"
+            nodeTrigger={
+              <Link
+                href="#"
+                onClick={e => {
+                  e.preventDefault();
+                }}
+                size="sm"
+              >
+                Reset it
+              </Link>
+            }
             onSubmit={() => {
               handleRequestResetPassword({ email: emailResetPassword });
             }}
