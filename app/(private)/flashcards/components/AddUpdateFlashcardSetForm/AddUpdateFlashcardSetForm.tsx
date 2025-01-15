@@ -10,7 +10,7 @@ import SaveBtn from '@/app/(private)/flashcards/components/SaveBtn/SaveBtn';
 import TermList, {
   TermListRefMethods,
 } from '@/app/(private)/flashcards/[flashcardSetId]/components/TermList/TermList';
-import { autoScroll } from '@/utils/autoscroll';
+import { autoScroll } from '@/utils/autoScroll';
 
 const AddUpdateFlashcardSetForm = () => {
   // ------------------ HOOKS/VARs ------------------
