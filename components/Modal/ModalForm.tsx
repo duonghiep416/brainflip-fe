@@ -24,6 +24,7 @@ interface ModalFormProps {
   bodyStyle?: React.CSSProperties;
   footerStyle?: React.CSSProperties;
   isActionDisabled?: boolean;
+  isAlwaysOpen?: boolean;
   cleanupFunction?: () => void;
   [key: string]: any;
 }
@@ -35,12 +36,13 @@ export const ModalForm: React.FC<ModalFormProps> = ({
   children,
   isCloseBtn = true,
   onSubmit,
-  actionButtonText = 'Submit',
+  actionButtonText,
   headerStyle,
   bodyStyle,
   footerStyle,
   isActionDisabled,
   cleanupFunction,
+  isAlwaysOpen = false,
   ...props
 }) => {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
@@ -93,7 +95,7 @@ export const ModalForm: React.FC<ModalFormProps> = ({
           onPress: onOpen,
         })}
       <ModalNextUI
-        isOpen={isOpen}
+        isOpen={isAlwaysOpen || isOpen}
         onOpenChange={(open: boolean) => {
           if (!open && cleanupFunction) {
             cleanupFunction();

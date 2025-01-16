@@ -12,6 +12,7 @@ const ForgotPasswordPage = () => {
       backdrop="opaque"
       isCloseBtn={false}
       hideCloseButton
+      isAlwaysOpen
     >
       <FormResetPassword />
     </ModalForm>
