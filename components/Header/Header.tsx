@@ -9,14 +9,15 @@ import ReactDOM from 'react-dom';
 import AddPopover from '@/components/AddPopover/AddPopover';
 export const Header = () => {
   const [isClient, setIsClient] = useState(false);
+  const portalTarget = document.getElementById('header-portal');
 
   useEffect(() => {
     setIsClient(true);
+    portalTarget?.style.setProperty('visibility', 'visible');
+    portalTarget?.style.setProperty('opacity', '1');
   }, []);
 
   if (!isClient) return null;
-
-  const portalTarget = document.getElementById('header-portal');
 
   if (!portalTarget) return null;
   return ReactDOM.createPortal(

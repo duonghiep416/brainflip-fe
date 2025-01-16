@@ -22,13 +22,15 @@ const CarouselSlide = ({
         )}
       >
         <div className={clsx(styles.carousel__front)}>
-          <div className="absolute top-1 lg:-top-3 right-3 flex items-center">
-            <TextToSpeechBtn sentence={flashcard.term} />
-            <EditFlashcard
-              flashcardId={flashcard.id}
-              defaultTerm={flashcard.term}
-              defaultDefinition={flashcard.definition}
-            />
+          <div className="absolute top-2 lg:top-3 right-3">
+            <div className="flex-center-vertical gap-2 leading-none">
+              <TextToSpeechBtn sentence={flashcard.term} />
+              <EditFlashcard
+                flashcardId={flashcard.id}
+                defaultTerm={flashcard.term}
+                defaultDefinition={flashcard.definition}
+              />
+            </div>
           </div>
           <span>{flashcard.term}</span>
         </div>

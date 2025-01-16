@@ -74,52 +74,50 @@ const EditFlashcard: React.FC<EditFlashcardProps> = ({
   };
 
   return (
-    <div>
-      <ModalForm
-        icon={<IoPencil />}
-        header={`Edit Flashcard`}
-        isActionDisabled
-        cleanupFunction={() => {
-          setTerm(defaultTerm);
-          setDefinition(defaultDefinition);
-          setErrors({ term: '', definition: '' });
+    <ModalForm
+      icon={<IoPencil className="leading-none" />}
+      header={`Edit Flashcard`}
+      isActionDisabled
+      cleanupFunction={() => {
+        setTerm(defaultTerm);
+        setDefinition(defaultDefinition);
+        setErrors({ term: '', definition: '' });
+      }}
+    >
+      <form
+        onSubmit={e => {
+          e.preventDefault();
+          throttledSubmit.current(handleSubmit, e);
         }}
       >
-        <form
-          onSubmit={e => {
-            e.preventDefault();
-            throttledSubmit.current(handleSubmit, e);
-          }}
-        >
-          <Input
-            label="Terminology"
-            name="term"
-            value={term}
-            onValueChange={handleTermChange}
-            isInvalid={!!errors.term}
-            errorMessage={errors.term}
-            variant="bordered"
-            className="mb-4"
-          />
+        <Input
+          label="Terminology"
+          name="term"
+          value={term}
+          onValueChange={handleTermChange}
+          isInvalid={!!errors.term}
+          errorMessage={errors.term}
+          variant="bordered"
+          className="mb-4"
+        />
 
-          <Textarea
-            label="Definition"
-            name="definition"
-            value={definition}
-            onValueChange={handleDefinitionChange}
-            isInvalid={!!errors.definition}
-            errorMessage={errors.definition}
-            variant="bordered"
-            className="mb-4"
-            minRows={2}
-          />
+        <Textarea
+          label="Definition"
+          name="definition"
+          value={definition}
+          onValueChange={handleDefinitionChange}
+          isInvalid={!!errors.definition}
+          errorMessage={errors.definition}
+          variant="bordered"
+          className="mb-4"
+          minRows={2}
+        />
 
-          <Button color="success" type="submit">
-            Save
-          </Button>
-        </form>
-      </ModalForm>
-    </div>
+        <Button color="success" type="submit">
+          Save
+        </Button>
+      </form>
+    </ModalForm>
   );
 };
 
