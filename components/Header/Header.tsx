@@ -7,19 +7,23 @@ import ProfilePopover from '@/components/ProfilePopover/ProfilePopover';
 import { useEffect, useState } from 'react';
 import ReactDOM from 'react-dom';
 import AddPopover from '@/components/AddPopover/AddPopover';
+
 export const Header = () => {
   const [isClient, setIsClient] = useState(false);
-  const portalTarget = document.getElementById('header-portal');
+  const [portalTarget, setPortalTarget] = useState<HTMLElement | null>(null);
 
   useEffect(() => {
     setIsClient(true);
-    portalTarget?.style.setProperty('visibility', 'visible');
-    portalTarget?.style.setProperty('opacity', '1');
+    const target = document.getElementById('header-portal');
+    if (target) {
+      target.style.setProperty('visibility', 'visible');
+      target.style.setProperty('opacity', '1');
+    }
+    setPortalTarget(target);
   }, []);
 
-  if (!isClient) return null;
+  if (!isClient || !portalTarget) return null;
 
-  if (!portalTarget) return null;
   return ReactDOM.createPortal(
     <header className={clsx(styles.header, 'dark:bg-neutral-dark-md')}>
       <Navbar />
