@@ -9,4 +9,5 @@ export const endpoints = {
   getFlashcard: '/flashcards',
   addFlashcards: '/flashcard-sets',
   createFlashcards: '/flashcard-sets',
+  updateFlashcard: '/flashcards',
 };

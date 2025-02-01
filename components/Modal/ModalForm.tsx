@@ -16,7 +16,7 @@ interface ModalFormProps {
   nodeTrigger?: React.ReactNode;
   icon?: React.ReactNode;
   header?: React.ReactNode;
-  children: React.ReactNode;
+  children: ((onClose: () => void) => React.ReactNode) | React.ReactNode;
   isCloseBtn?: boolean;
   onSubmit?: () => void | Promise<void>;
   actionButtonText?: string;
@@ -26,6 +26,7 @@ interface ModalFormProps {
   isActionDisabled?: boolean;
   isAlwaysOpen?: boolean;
   cleanupFunction?: () => void;
+  isClose?: boolean;
   [key: string]: any;
 }
 
@@ -68,6 +69,10 @@ export const ModalForm: React.FC<ModalFormProps> = ({
       modalWrapper.addEventListener('click', handleClick);
     }
 
+    if (cleanupFunction) {
+      cleanupFunction();
+    }
+
     return () => {
       if (modalWrapper) {
         modalWrapper.removeEventListener('click', handleClick);
@@ -97,9 +102,6 @@ export const ModalForm: React.FC<ModalFormProps> = ({
       <ModalNextUI
         isOpen={isAlwaysOpen || isOpen}
         onOpenChange={(open: boolean) => {
-          if (!open && cleanupFunction) {
-            cleanupFunction();
-          }
           onOpenChange();
         }}
         onClick={e => {
@@ -116,7 +118,10 @@ export const ModalForm: React.FC<ModalFormProps> = ({
               {header && (
                 <ModalHeader style={headerStyle}>{header}</ModalHeader>
               )}
-              <ModalBody style={bodyStyle}>{children}</ModalBody>
+              <ModalBody style={bodyStyle}>
+                {' '}
+                {typeof children === 'function' ? children(onClose) : children}
+              </ModalBody>
               {!isActionDisabled && (
                 <ModalFooter style={footerStyle}>
                   {isCloseBtn && (

@@ -3,6 +3,7 @@ import { ModalForm } from '@/components/Modal/ModalForm';
 import { Button, Input, Textarea } from '@nextui-org/react';
 import { IoPencil } from 'react-icons/io5';
 import _, { throttle } from 'lodash';
+import { useUpdateFlashcardMutation } from '@/features/flashcard/flashcardApiSlice';
 
 // Tạo type cho props (nếu bạn dùng TypeScript)
 interface EditFlashcardProps {
@@ -29,8 +30,15 @@ const EditFlashcard: React.FC<EditFlashcardProps> = ({
   const [term, setTerm] = React.useState(defaultTerm);
   const [definition, setDefinition] = React.useState(defaultDefinition);
   const [errors, setErrors] = React.useState({ term: '', definition: '' });
+  const [updateFlashcards] = useUpdateFlashcardMutation();
 
-  const handleSubmit = (e: FormEvent) => {
+  const cleanupFunction = () => {
+    setTerm(defaultTerm);
+    setDefinition(defaultDefinition);
+    setErrors({ term: '', definition: '' });
+  };
+
+  const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
 
     const newErrors = { term: '', definition: '' };
@@ -44,15 +52,14 @@ const EditFlashcard: React.FC<EditFlashcardProps> = ({
 
     // Nếu không có lỗi => gọi hành động "lưu"
     if (!newErrors.term && !newErrors.definition) {
-      // Ở đây bạn có thể gọi API, hoặc dispatch action... tuỳ ý
-      // Giả sử ta in ra console:
-      console.log('Saved flashcard:', {
+      const response = await updateFlashcards({
         id: flashcardId,
-        term,
-        definition,
+        body: { term, definition },
       });
-      // ... Đóng modal, reset form, v.v.
+      console.log('Saved flashcard:', response);
     }
+
+    cleanupFunction();
   };
 
   const throttledSubmit = React.useRef(createThrottleSubmit());
@@ -78,45 +85,44 @@ const EditFlashcard: React.FC<EditFlashcardProps> = ({
       icon={<IoPencil className="leading-none" />}
       header={`Edit Flashcard`}
       isActionDisabled
-      cleanupFunction={() => {
-        setTerm(defaultTerm);
-        setDefinition(defaultDefinition);
-        setErrors({ term: '', definition: '' });
-      }}
+      cleanupFunction={cleanupFunction}
     >
-      <form
-        onSubmit={e => {
-          e.preventDefault();
-          throttledSubmit.current(handleSubmit, e);
-        }}
-      >
-        <Input
-          label="Terminology"
-          name="term"
-          value={term}
-          onValueChange={handleTermChange}
-          isInvalid={!!errors.term}
-          errorMessage={errors.term}
-          variant="bordered"
-          className="mb-4"
-        />
+      {(onClose: () => void) => (
+        <form
+          onSubmit={e => {
+            e.preventDefault();
+            throttledSubmit.current(handleSubmit, e);
+            onClose();
+          }}
+        >
+          <Input
+            label="Terminology"
+            name="term"
+            value={term}
+            onValueChange={handleTermChange}
+            isInvalid={!!errors.term}
+            errorMessage={errors.term}
+            variant="bordered"
+            className="mb-4"
+          />
 
-        <Textarea
-          label="Definition"
-          name="definition"
-          value={definition}
-          onValueChange={handleDefinitionChange}
-          isInvalid={!!errors.definition}
-          errorMessage={errors.definition}
-          variant="bordered"
-          className="mb-4"
-          minRows={2}
-        />
+          <Textarea
+            label="Definition"
+            name="definition"
+            value={definition}
+            onValueChange={handleDefinitionChange}
+            isInvalid={!!errors.definition}
+            errorMessage={errors.definition}
+            variant="bordered"
+            className="mb-4"
+            minRows={2}
+          />
 
-        <Button color="success" type="submit">
-          Save
-        </Button>
-      </form>
+          <Button color="success" type="submit">
+            Save
+          </Button>
+        </form>
+      )}
     </ModalForm>
   );
 };

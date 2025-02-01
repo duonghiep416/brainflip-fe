@@ -2,6 +2,7 @@ import { endpoints } from '@/configs/endpoints';
 import baseQuery from '@/features/baseQuery';
 import { FlashcardResponse } from '@/features/flashcard/types';
 import { createApi } from '@reduxjs/toolkit/query/react';
+import { update } from 'lodash';
 
 export const flashcardApiSlice = createApi({
   reducerPath: 'flashcard',
@@ -54,6 +55,24 @@ export const flashcardApiSlice = createApi({
       }),
       invalidatesTags: ['Flashcards'],
     }),
+
+    updateFlashcard: builder.mutation<
+      void,
+      {
+        id: string | number;
+        body: {
+          term: string;
+          definition: string;
+        };
+      }
+    >({
+      query: ({ id, body }) => ({
+        url: `${endpoints.updateFlashcard}/${id}`,
+        method: 'PUT',
+        body,
+      }),
+      invalidatesTags: ['Flashcards'],
+    }),
   }),
 });
 
@@ -62,4 +81,5 @@ export const {
   useAddFlashcardsMutation,
   useRemoveFlashcardsMutation,
   useUpdateFlashcardsMutation,
+  useUpdateFlashcardMutation,
 } = flashcardApiSlice;

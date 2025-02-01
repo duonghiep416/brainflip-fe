@@ -14,6 +14,7 @@ import { IoAdd } from 'react-icons/io5';
 import { TbDragDrop } from 'react-icons/tb';
 import TextToSpeechBtn from '@/components/TextToSpeechBtn/TextToSpeechBtn';
 import EditFlashcard from '@/app/(private)/flashcards/[flashcardSetId]/components/EditFlashcard/EditFlashcard';
+import { placeCaretAtEnd } from '@/utils/placeCaretAtEnd';
 
 interface TermListItemI extends TermListProps {
   flashcard: Flashcard;
@@ -34,6 +35,10 @@ const TermListItem = ({
   const [isExpanded, setIsExpanded] = useState(false);
   const [hasOverflow, setHasOverflow] = useState(false);
   const definitionRef = useRef<HTMLParagraphElement>(null);
+
+  const handleFocus = (e: React.FocusEvent<HTMLElement>) => {
+    placeCaretAtEnd(e.target);
+  };
 
   useLayoutEffect(() => {
     const definitionEl = definitionRef.current;
@@ -128,6 +133,7 @@ const TermListItem = ({
                 handleChangeFlashcard(order - 1, 'term', e.target.innerText);
               }
             }}
+            onFocus={handleFocus}
           >
             {flashcard.term}
           </h3>
@@ -145,6 +151,7 @@ const TermListItem = ({
             contentEditable={type !== 'view'}
             spellCheck={false}
             suppressContentEditableWarning
+            onFocus={handleFocus}
             onBlur={e => {
               if (e.target.innerText !== flashcard.definition) {
                 handleChangeFlashcard(
