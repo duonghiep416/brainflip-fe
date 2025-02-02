@@ -3,6 +3,7 @@ export interface Flashcard {
   term: string;
   definition: string;
   created_at: string; // hoặc Date, tùy theo bạn muốn parse dữ liệu thành Date hay để nguyên dạng string
+  isBookmarked?: boolean;
   updated_at: string; // tương tự như trên
   [key: string]: any;
 }

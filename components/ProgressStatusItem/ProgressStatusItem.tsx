@@ -17,37 +17,37 @@ const colorClasses = {
     'stroke-green-300 dark:stroke-green-200 text-green-300 dark:text-green-200',
 };
 
+const variants = {
+  new: {
+    key: 'new',
+    text: 'New',
+    progress: 5,
+    color: 'red',
+  },
+  learning: {
+    key: 'learning',
+    text: 'Learning',
+    progress: 50,
+    color: 'violet',
+  },
+  'almost done': {
+    key: 'almostDone',
+    text: 'Almost Done',
+    progress: 75,
+    color: 'blue',
+  },
+  mastered: {
+    key: 'mastered',
+    text: 'Mastered',
+    progress: 100,
+    color: 'green',
+  },
+};
+
 const ProgressStatusItem = ({
   level = 'almost done',
   type = 'flashcard',
 }: ProgressStatusItemProps) => {
-  const variants = {
-    new: {
-      key: 'new',
-      text: 'New',
-      progress: 5,
-      color: 'red',
-    },
-    learning: {
-      key: 'learning',
-      text: 'Learning',
-      progress: 50,
-      color: 'violet',
-    },
-    'almost done': {
-      key: 'almostDone',
-      text: 'Almost Done',
-      progress: 75,
-      color: 'blue',
-    },
-    mastered: {
-      key: 'mastered',
-      text: 'Mastered',
-      progress: 100,
-      color: 'green',
-    },
-  };
-
   return (
     <div
       className={clsx(
@@ -66,7 +66,9 @@ const ProgressStatusItem = ({
         strokeWidth={5}
         aria-label="Progress status"
       />
-      <div className={clsx(colorClasses[level])}>{variants[level].text}</div>
+      <div className={clsx(colorClasses[level], 'hidden sm:block')}>
+        {variants[level].text}
+      </div>
     </div>
   );
 };

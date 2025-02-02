@@ -15,6 +15,8 @@ import { TbDragDrop } from 'react-icons/tb';
 import TextToSpeechBtn from '@/components/TextToSpeechBtn/TextToSpeechBtn';
 import EditFlashcard from '@/app/(private)/flashcards/[flashcardSetId]/components/EditFlashcard/EditFlashcard';
 import { placeCaretAtEnd } from '@/utils/placeCaretAtEnd';
+import TermMarking from '@/components/TermMarking/TermMarking';
+import TermAnnotation from '@/components/TermAnnotation/TermAnnotation';
 
 interface TermListItemI extends TermListProps {
   flashcard: Flashcard;
@@ -91,6 +93,8 @@ const TermListItem = ({
               <>
                 <ProgressStatusItem />
                 <TextToSpeechBtn sentence={flashcard.term} />
+                <TermMarking flashcard={flashcard} />
+                <TermAnnotation flashcard={flashcard} />
                 <EditFlashcard
                   flashcardId={flashcard.id}
                   defaultTerm={flashcard.term}

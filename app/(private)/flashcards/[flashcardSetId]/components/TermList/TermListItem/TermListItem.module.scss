@@ -1,8 +1,8 @@
 .card {
-  @apply p-4 min-h-48 overflow-hidden;
+  @apply p-4 min-h-48 sm:min-h-40 overflow-hidden;
 
   &.collapsed {
-    @apply h-48 max-h-64;
+    @apply min-h-48 sm:h-40 max-h-64;
   }
 }
 
@@ -31,7 +31,7 @@
 }
 
 .cta {
-  @apply flex justify-end items-center gap-2;
+  @apply flex justify-end items-center gap-1 sm:gap-2;
 }
 
 .toggleButton {

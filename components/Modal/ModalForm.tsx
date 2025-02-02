@@ -88,7 +88,7 @@ export const ModalForm: React.FC<ModalFormProps> = ({
           variant="bordered"
           radius="full"
           size="sm"
-          aria-label="Edit flashcard"
+          aria-label={props['aria-label'] || 'Open modal'}
           onPress={onOpen}
         >
           {icon}

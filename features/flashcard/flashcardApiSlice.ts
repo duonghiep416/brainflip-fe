@@ -73,6 +73,18 @@ export const flashcardApiSlice = createApi({
       }),
       invalidatesTags: ['Flashcards'],
     }),
+
+    updateFlashcardBookmark: builder.mutation<
+      void,
+      {
+        id: string | number;
+      }
+    >({
+      query: ({ id }) => ({
+        url: `${endpoints.bookmarkFlashcard}/${id}`,
+        method: 'PATCH',
+      }),
+    }),
   }),
 });
 
@@ -82,4 +94,5 @@ export const {
   useRemoveFlashcardsMutation,
   useUpdateFlashcardsMutation,
   useUpdateFlashcardMutation,
+  useUpdateFlashcardBookmarkMutation,
 } = flashcardApiSlice;

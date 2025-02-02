@@ -75,7 +75,7 @@ export default async function FlashcardPage({ params }: FlashcardsPageProps) {
     <div>
       <h1 className={styles.title}>{flashcard.title}</h1>
       <h2 className={styles.description}>
-        {flashcard.description} | {flashcard.total} flashcards
+        {flashcard.description} | {flashcard.metadata.total} flashcards
       </h2>
       <Carousel />
       <TermList type="view" setInfo={flashcard} />

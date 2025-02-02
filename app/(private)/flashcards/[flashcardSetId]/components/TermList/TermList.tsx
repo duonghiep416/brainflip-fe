@@ -64,6 +64,13 @@ const TermList = forwardRef<TermListRefMethods, TermListProps>(
     );
     const [localData, setLocalData] = useState(initialData);
 
+    const bookmarkedFlashcards = localData.filter(
+      flashcard => flashcard.isBookmarked,
+    );
+    const unbookmarkedFlashcards = localData.filter(
+      flashcard => !flashcard.isBookmarked,
+    );
+
     // State theo dõi submit
     const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -280,22 +287,68 @@ const TermList = forwardRef<TermListRefMethods, TermListProps>(
           />
         )}
 
-        <div className="flex flex-col gap-4 mt-20">
-          {localData.map((flashcard, index) => (
-            <TermListItem
-              key={flashcard.id}
-              flashcard={flashcard}
-              order={index + 1}
-              type={type}
-              handleChangeFlashcard={(i, k, v) => {
-                debouncedHandleChangeFlashcard(i, k, v);
-              }}
-              handleActionFlashcard={handleActionFlashcard}
-              handleSaveLocalData={handleSaveLocalData}
-            />
-          ))}
-        </div>
+        <div className="mt-20">
+          {type === 'view' ? (
+            <>
+              {/* Danh sách đã bookmark */}
+              <div>
+                <h2 className="text-lg font-semibold mb-4">Bookmarked Terms</h2>
+                <div className="flex flex-col gap-4">
+                  {bookmarkedFlashcards.map((flashcard, index) => (
+                    <TermListItem
+                      key={flashcard.id}
+                      flashcard={flashcard}
+                      order={index + 1}
+                      type={type}
+                      handleChangeFlashcard={(i, k, v) => {
+                        debouncedHandleChangeFlashcard(i, k, v);
+                      }}
+                      handleActionFlashcard={handleActionFlashcard}
+                      handleSaveLocalData={handleSaveLocalData}
+                    />
+                  ))}
+                </div>
+              </div>
 
+              {/* Danh sách chưa bookmark */}
+              <div className="mt-10">
+                <h2 className="text-lg font-semibold mb-4">Other Terms</h2>
+                <div className="flex flex-col gap-4">
+                  {unbookmarkedFlashcards.map((flashcard, index) => (
+                    <TermListItem
+                      key={flashcard.id}
+                      flashcard={flashcard}
+                      order={index + 1}
+                      type={type}
+                      handleChangeFlashcard={(i, k, v) => {
+                        debouncedHandleChangeFlashcard(i, k, v);
+                      }}
+                      handleActionFlashcard={handleActionFlashcard}
+                      handleSaveLocalData={handleSaveLocalData}
+                    />
+                  ))}
+                </div>
+              </div>
+            </>
+          ) : (
+            // Nếu không phải view: hiển thị danh sách gộp
+            <div className="flex flex-col gap-4">
+              {localData.map((flashcard, index) => (
+                <TermListItem
+                  key={flashcard.id}
+                  flashcard={flashcard}
+                  order={index + 1}
+                  type={type}
+                  handleChangeFlashcard={(i, k, v) =>
+                    debouncedHandleChangeFlashcard(i, k, v)
+                  }
+                  handleActionFlashcard={handleActionFlashcard}
+                  handleSaveLocalData={handleSaveLocalData}
+                />
+              ))}
+            </div>
+          )}
+        </div>
         {type !== 'view' && (
           <div className="flex justify-center">
             <Button

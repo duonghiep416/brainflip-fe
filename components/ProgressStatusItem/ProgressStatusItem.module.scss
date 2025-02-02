@@ -1,5 +1,5 @@
 .progressStatusItemContainer {
-  @apply min-w-36 max-w-48 rounded-full p-2 flex items-center gap-1;
+  @apply sm:min-w-36 max-w-48 rounded-full p-1 sm:p-2 flex items-center gap-1;
 }
 
 .new {
@@ -20,6 +20,6 @@
 
 @media (max-width: 640px) {
   .progressStatusItemContainer {
-    @apply min-w-28 max-w-36;
+    @apply sm:min-w-28 max-w-36;
   }
 }
