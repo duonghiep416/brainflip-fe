@@ -17,7 +17,8 @@ export async function middleware(request: NextRequest) {
     pathname.startsWith('/_next') || // Bỏ qua tất cả các static assets từ /_next
     pathname.startsWith('/fonts') || // Bỏ qua các request đến font
     pathname === '/favicon.ico' || // Bỏ qua favicon
-    pathname === '/logo.svg' // Bỏ qua logo
+    pathname === '/logo.svg' || // Bỏ qua logo
+    pathname === '/screenshot.png'
   ) {
     return NextResponse.next(); // Tiếp tục request mà không cần xử lý
   }

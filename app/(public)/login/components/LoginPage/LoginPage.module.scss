@@ -28,4 +28,11 @@
       }
     }
   }
+
+  .item_content_img {
+    @apply hidden lg:flex h-screen justify-end items-center rounded-tl-3xl rounded-bl-3xl overflow-hidden;
+    .img {
+      @apply rounded-tl-3xl rounded-bl-3xl;
+    }
+  }
 }

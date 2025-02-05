@@ -92,8 +92,16 @@ export const LoginPage = () => {
       </div>
       <div className={clsx(styles.item, styles.item_sub)}>
         <div className={styles.item_content}>
-          <div className={styles.item_content_title}>
-            <h1>Login</h1>
+          <div className={styles.item_content_title}></div>
+          <div className={styles.item_content_img}>
+            <Image
+              src="/screenshot.png"
+              width={900}
+              height={900}
+              priority
+              alt="Screenshot Brain Flip"
+              className={styles.img}
+            />
           </div>
         </div>
       </div>
