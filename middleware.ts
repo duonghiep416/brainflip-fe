@@ -22,9 +22,9 @@ export async function middleware(request: NextRequest) {
   ) {
     return NextResponse.next(); // Tiếp tục request mà không cần xử lý
   }
-  // Nếu không có token, redirect về trang login
-  if (!token && pathname !== '/login') {
-    return NextResponse.redirect(new URL('/login', request.url));
+  // Nếu không có token, redirect về trang landing
+  if (!token && pathname !== '/login' && pathname !== '/landing') {
+    return NextResponse.redirect(new URL('/landing', request.url));
   }
   // Nếu có token, call api lấy thông tin người dùng để kiểm tra token
   if (token) {
@@ -38,7 +38,9 @@ export async function middleware(request: NextRequest) {
       // Check if the response is not ok (unauthorized)
       if (!response.ok) {
         // Clear the invalid token from cookies
-        const response = NextResponse.redirect(new URL('/login', request.url));
+        const response = NextResponse.redirect(
+          new URL('/landing', request.url),
+        );
         response.cookies.delete('auth-token');
         return response;
       }
@@ -52,7 +54,7 @@ export async function middleware(request: NextRequest) {
     } catch (error) {
       console.error('Error checking token:', error);
       // In case of an error, we might want to redirect to login as well
-      return NextResponse.redirect(new URL('/login', request.url));
+      return NextResponse.redirect(new URL('/landing', request.url));
     }
   }
   return NextResponse.next();
