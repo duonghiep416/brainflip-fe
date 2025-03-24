@@ -26,7 +26,7 @@ export async function middleware(request: NextRequest) {
     return NextResponse.next();
   }
   
-  const token = request.cookies.get('auth-token');
+  const token = request.cookies.get('accessToken');
   
   // Nếu không có token, chuyển hướng về trang landing
   if (!token) {
