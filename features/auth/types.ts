@@ -1,4 +1,4 @@
-import { UserRole } from '@/enums/roles.enums';
+import { Role } from "@/enums/roles.enums";
 
 export interface LoginCredentials {
   email: string;
@@ -17,24 +17,26 @@ export interface LoginApiResponse {
 }
 
 export interface RegisterCredentials {
-  username: string;
   email: string;
-  name: string;
-  dob?: string;
-  role?: UserRole;
+  username: string;
+  fullName: string;
   password: string;
 }
 
 export interface RegisterApiResponse {
-  username: string;
-  email: string;
-  name: string;
-  dob?: string | null;
-  last_login?: string | null;
-  id: string;
-  role?: UserRole;
-  created_at: string;
-  updated_at: string;
+  user: {
+    email: string;
+    username: string;
+    fullName: string;
+    refreshToken: string | null;
+    id: string;
+    roles: Role[];
+    isEmailVerified: boolean;
+    createdAt: string;
+    updatedAt: string;
+  };
+  accessToken: string;
+  refreshToken: string;
 }
 
 export interface RequestResetPasswordCredentials {

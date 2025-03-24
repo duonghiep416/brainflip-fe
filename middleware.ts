@@ -1,61 +1,51 @@
-import { SERVER_URL } from '@/configs/site.config';
 import { NextRequest, NextResponse } from 'next/server';
 
+// Danh sách các đường dẫn công khai không yêu cầu xác thực
+const publicPaths = ['/login', '/landing', '/forgot-password/reset'];
+
+// Danh sách các đường dẫn tài nguyên tĩnh cần bỏ qua
+const staticPaths = [
+  '/_next',
+  '/fonts',
+  '/favicon.ico',
+  '/logo.svg',
+  '/screenshot.png',
+  '/api',  // Bỏ qua các API route
+];
+
 export async function middleware(request: NextRequest) {
+  const { pathname } = request.nextUrl;
+  
+  // Kiểm tra nếu là tài nguyên tĩnh, bỏ qua xử lý
+  if (staticPaths.some(path => pathname === path || pathname.startsWith(path))) {
+    return NextResponse.next();
+  }
+  
+  // Kiểm tra nếu là đường dẫn công khai, cho phép truy cập
+  if (publicPaths.some(path => pathname === path || pathname.startsWith(path))) {
+    return NextResponse.next();
+  }
+  
   const token = request.cookies.get('auth-token');
-  const refreshToken = request.cookies.get('auth-refresh-token');
-  const pathname = request.nextUrl.pathname;
-
-  // Exception for specific paths that do not require authentication
-  const exceptionPaths = ['/forgot-password/reset'];
-  if (exceptionPaths.includes(pathname)) {
-    return NextResponse.next(); // Allow the request to proceed without authentication
-  }
-
-  // Bỏ qua các request đến tài nguyên tĩnh như /_next/ hoặc /favicon.ico, /logo.svg
-  if (
-    pathname.startsWith('/_next') || // Bỏ qua tất cả các static assets từ /_next
-    pathname.startsWith('/fonts') || // Bỏ qua các request đến font
-    pathname === '/favicon.ico' || // Bỏ qua favicon
-    pathname === '/logo.svg' || // Bỏ qua logo
-    pathname === '/screenshot.png'
-  ) {
-    return NextResponse.next(); // Tiếp tục request mà không cần xử lý
-  }
-  // Nếu không có token, redirect về trang landing
-  if (!token && pathname !== '/login' && pathname !== '/landing') {
+  
+  // Nếu không có token, chuyển hướng về trang landing
+  if (!token) {
     return NextResponse.redirect(new URL('/landing', request.url));
   }
-  // Nếu có token, call api lấy thông tin người dùng để kiểm tra token
-  if (token) {
-    try {
-      const response = await fetch(`${SERVER_URL}/auth/validate-token`, {
-        headers: {
-          Authorization: `Bearer ${token.value}`,
-        },
-      });
-
-      // Check if the response is not ok (unauthorized)
-      if (!response.ok) {
-        // Clear the invalid token from cookies
-        const response = NextResponse.redirect(
-          new URL('/landing', request.url),
-        );
-        response.cookies.delete('auth-token');
-        return response;
-      }
-
-      if (response.ok && pathname === '/login') {
-        return NextResponse.redirect(new URL('/', request.url));
-      }
-
-      // If the response is ok, the token is valid
-      // We can proceed with the request
-    } catch (error) {
-      console.error('Error checking token:', error);
-      // In case of an error, we might want to redirect to login as well
-      return NextResponse.redirect(new URL('/landing', request.url));
-    }
+  
+  // Nếu có token và đang ở trang login, chuyển hướng về trang chủ
+  if (token && pathname === '/login') {
+    return NextResponse.redirect(new URL('/', request.url));
   }
+  
+  // Có token, cho phép truy cập - API "me" sẽ được gọi trong trang để xác thực và lấy profile
   return NextResponse.next();
 }
+
+// Cấu hình matcher để chỉ áp dụng middleware cho các đường dẫn cần thiết
+export const config = {
+  matcher: [
+    // Matcher cho tất cả các đường dẫn ngoại trừ các tài nguyên tĩnh
+    '/((?!_next/static|_next/image|favicon.ico).*)',
+  ],
+};

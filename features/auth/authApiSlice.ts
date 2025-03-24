@@ -60,12 +60,11 @@ export const authApiSlice = createApi({
       },
     }),
 
-    logout: builder.mutation<void, LogoutCredentials>({
-      query: credentials => {
+    logout: builder.mutation<void, void>({
+      query: () => {
         return {
           url: endpoints.logout,
           method: 'POST',
-          body: credentials,
         };
       },
     }),

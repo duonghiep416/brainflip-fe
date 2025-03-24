@@ -10,52 +10,53 @@ import styles from './ProfilePopover.module.scss';
 import { CiSettings } from 'react-icons/ci';
 import { PiSignOut, PiUser } from 'react-icons/pi';
 import clsx from 'clsx';
-import { useLogoutMutation } from '@/features/auth/authApiSlice';
-import { clearCookies, getTokenFromCookie } from '@/utils/token';
 import { toast } from 'sonner';
 import { useLoading } from '@/components/Providers/LoadingProvider';
 import { useRouter } from 'next/navigation';
-import { useEffect } from 'react';
+import { useState } from 'react';
 import { useGetMeQuery } from '@/features/user/userApiSlice';
 import Link from 'next/link';
 
 const ProfilePopover = () => {
-  const [logout, { isLoading: isLoadingLogout, error: errorLogout }] =
-    useLogoutMutation();
-
   const { data: dataProfile, error, isLoading } = useGetMeQuery();
   const router = useRouter();
   const { showLoading, hideLoading } = useLoading();
+  const [isLoadingLogout, setIsLoadingLogout] = useState(false);
+
   const handleLogout = async () => {
     try {
-      const refreshToken = getTokenFromCookie('auth-refresh-token');
-      await logout({
-        refreshToken,
-      }).unwrap();
-      clearCookies(['auth-refresh-token', 'auth-token']);
+      setIsLoadingLogout(true);
+      showLoading();
+      
+      // Call Next.js API route
+      const response = await fetch('/api/auth/logout', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
+      
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || 'Logout failed');
+      }
+      
+      // Navigate to login page after successful logout
       router.push('/login');
+      router.refresh(); // Force a refresh to update auth state
     } catch (e: any) {
-      toast.error(e.data.message);
+      toast.error(e.message || 'An error occurred during logout');
+    } finally {
+      setIsLoadingLogout(false);
+      hideLoading();
     }
   };
-
-  useEffect(() => {
-    if (isLoadingLogout) {
-      showLoading();
-    } else {
-      hideLoading();
-    }
-
-    return () => {
-      hideLoading();
-    };
-  }, [isLoadingLogout]);
 
   return (
     <Popover>
       <PopoverTrigger>
         <Avatar
-          src="https://via.placeholder.com/40"
+          src={dataProfile?.avatarUrl || "https://via.placeholder.com/40"}
           alt="User Avatar"
           size="sm"
           className="cursor-pointer"
@@ -67,12 +68,12 @@ const ProfilePopover = () => {
           <div className={styles['menu-header']}>
             <div className="flex items-center gap-2">
               <Avatar
-                src="https://via.placeholder.com/40"
+                src={dataProfile?.avatarUrl || "https://via.placeholder.com/40"}
                 alt="User Avatar"
                 size="md"
               />
               <div>
-                <p className="font-bold">{dataProfile?.name}</p>
+                <p className="font-bold">{dataProfile?.name || 'User'}</p>
                 <p className={styles.email}>{dataProfile?.email}</p>
                 <p className={styles.username}>@{dataProfile?.username}</p>
               </div>
@@ -102,7 +103,10 @@ const ProfilePopover = () => {
           </div>
 
           {/* Logout */}
-          <div className={styles.logout} onClick={handleLogout}>
+          <div 
+            className={clsx(styles.logout, isLoadingLogout && 'opacity-50 cursor-not-allowed')} 
+            onClick={!isLoadingLogout ? handleLogout : undefined}
+          >
             <PiSignOut /> Log Out
           </div>
         </div>

@@ -56,26 +56,71 @@ export const FormAuth = ({
 
   const handleLogin = async (body: LoginCredentials) => {
     try {
-      const userData = await login(body).unwrap();
-      document.cookie = `auth-token=${
-        userData.accessToken.value
-      }; path=/; max-age=${parseDuration(userData.accessToken.expiresIn)};`;
-      document.cookie = `auth-refresh-token=${
-        userData.refreshToken.value
-      }; path=/; max-age=${parseDuration(userData.refreshToken.expiresIn)};`;
+      // setIsLoadingRegister(true);
+      
+      // Gọi Next.js API route thay vì gọi trực tiếp đến backend
+      const response = await fetch('/api/auth/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(body),
+      });
+      console.log('response', response);
+      const data = await response.json();
+      
+      if (!response.ok) {
+        throw new Error(data.message || 'Login failed');
+      }
+      
+      toast.success('Login successful!');
       router.push('/');
+      // handleTabChange('login');
     } catch (err: any) {
-      toast.error(err.data.message);
+      console.error(err);
+      toast.error(err.message || 'Registration failed');
+    } finally {
+      // setIsLoadingRegister(false);
     }
   };
 
+  // const handleRegister = async (body: RegisterCredentials) => {
+  //   try {
+  //     const registerResponse = await register(body).unwrap();
+  //     console.log('registerResponse', registerResponse);
+  //     toast.success('Registration successful!');
+  //     handleTabChange('login');
+  //   } catch (err: any) {
+  //     toast.error(err.data.message);
+  //   }
+  // };
+
   const handleRegister = async (body: RegisterCredentials) => {
     try {
-      await register(body).unwrap();
+      // setIsLoadingRegister(true);
+      
+      // Gọi Next.js API route thay vì gọi trực tiếp đến backend
+      const response = await fetch('/api/auth/register', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(body),
+      });
+      console.log('response', response);
+      const data = await response.json();
+      
+      if (!response.ok) {
+        throw new Error(data.message || 'Registration failed');
+      }
+      
       toast.success('Registration successful!');
-      handleTabChange('login');
+      // handleTabChange('login');
     } catch (err: any) {
-      toast.error(err.data.message);
+      console.error(err);
+      toast.error(err.message || 'Registration failed');
+    } finally {
+      // setIsLoadingRegister(false);
     }
   };
 
@@ -127,25 +172,6 @@ export const FormAuth = ({
     >
       {formType === 'signup' && (
         <>
-          <Controller
-            name="dob"
-            control={formMethods.control}
-            render={({ field }) => (
-              <DatePicker
-                {...field}
-                label={
-                  <p className="text-neutral-800 dark:text-neutral-200 text-sm font-semibold flex mt-3 mb-1">
-                    Birth Date (optional)
-                  </p>
-                }
-                variant="bordered"
-                showMonthAndYearPickers
-                radius="full"
-                labelPlacement="outside"
-                maxValue={today(getLocalTimeZone())}
-              />
-            )}
-          />
           <Input
             name="username"
             label="Username"
@@ -159,7 +185,7 @@ export const FormAuth = ({
             radius="lg"
           />
           <Input
-            name="name"
+            name="fullName"
             label="Full name"
             placeholder="Enter your full name"
             rules={{
@@ -197,7 +223,7 @@ export const FormAuth = ({
           pattern: {
             value: passwordRegex,
             message:
-              'Password must contain at least 8 characters, including uppercase, lowercase letters and numbers',
+              'Password must contain at least 6 characters, including letters and numbers',
           },
         }}
         isRequireMark={false}
